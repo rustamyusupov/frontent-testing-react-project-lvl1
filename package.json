@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "ISC",
   "author": "Rustam Yusupov",
-  "description": "Command line tool for downloading pages from the Internet",
+  "description": "Command-line tool for downloading pages from the Internet",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rustamyusupov/frontent-testing-react-project-lvl1.git"
