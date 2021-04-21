@@ -11,9 +11,11 @@ const run = () => {
     .version(version)
     .option('-o, --output [folder]', 'output folder', '.')
     .arguments('<url>')
-    .action((url) => {
+    .action(async (url) => {
+      const file = await loader(url, program.output);
+
       // eslint-disable-next-line no-console
-      console.log(loader(url, program.output));
+      console.log(file);
     });
 
   program.parse(process.argv);
