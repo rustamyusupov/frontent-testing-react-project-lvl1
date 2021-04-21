@@ -15,7 +15,7 @@
     "dist"
   ],
   "scripts": {
-    "start": "npx babel-node -- src/bin/page-loader.js https://github.com/rustamyusupov",
+    "start": "npx babel-node -- src/bin/page-loader.js -o .. https://ru.hexlet.io/courses",
     "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
     "lint": "eslint .",
     "test": "jest",
