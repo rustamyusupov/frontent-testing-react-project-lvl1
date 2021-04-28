@@ -10,7 +10,7 @@ const loader = async (url, folder) => {
 
   const response = await axios.get(url, { responseType: 'arraybuffer' });
 
-  await fs.promises.writeFile(filePath, response.data);
+  fs.writeFileSync(filePath, response.data);
 
   return filePath;
 };
