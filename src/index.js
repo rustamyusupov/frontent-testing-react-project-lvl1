@@ -2,14 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
 
-const getFileName = (url) => {
-  const { host, pathname } = new URL(url);
-  const location = `${host}${pathname}`;
-  const name = location.replace(/[^\w]/gi, '-');
-  const fileName = `${name}.html`;
-
-  return fileName;
-};
+import getFileName from './getFileName';
 
 const loader = async (url, folder) => {
   const fileName = getFileName(url);
