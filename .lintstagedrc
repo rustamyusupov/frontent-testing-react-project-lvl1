@@ -1,0 +1,6 @@
+{
+  "src/**/*.js": [
+    "prettier --config .prettierrc --write",
+    "eslint",
+  ]
+}
