@@ -19,6 +19,8 @@ describe('getFileName', () => {
   });
 
   it('should return empty string', () => {
-    expect('').toBe('');
+    const result = getFileName('');
+
+    expect(result).toBe('');
   });
 });
