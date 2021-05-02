@@ -2,14 +2,14 @@ import fs from 'fs';
 import path from 'path';
 
 import fetchFile from './fetchFile';
-import getFileName from './getFileName';
+import getName from './getName';
 
 const loader = async (url, folder) => {
   if (!url) {
     return '';
   }
 
-  const fileName = getFileName(url);
+  const fileName = `${getName(url)}.html`;
   const filePath = path.resolve(__dirname, folder, fileName);
 
   try {
