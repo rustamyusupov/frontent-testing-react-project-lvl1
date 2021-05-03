@@ -4,35 +4,29 @@ import path from 'path';
 
 import loader from '../src/index';
 
-const url = 'https://raw.githubusercontent.com/rustamyusupov/life-in-weeks/master/README.md';
-const fileData = path.join(
-  __dirname,
-  '../__fixtures__/raw-githubusercontent-com-rustamyusupov-life-in-weeks-master-README-md.html'
-);
+const url = 'https://ru.hexlet.io/courses';
 
 describe('index loader', () => {
   let tempDir = '';
 
   beforeEach(async () => {
-    tempDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'page-loader-'));
+    const dirPath = path.join(os.tmpdir(), 'page-loader-');
+
+    tempDir = await fs.promises.mkdtemp(dirPath);
   });
 
   it('should return filename', async () => {
     const result = await loader(url, tempDir);
-    const expected = path.join(
-      tempDir,
-      'raw-githubusercontent-com-rustamyusupov-life-in-weeks-master-README-md.html'
-    );
+    const expected = path.join(tempDir, 'ru-hexlet-io-courses.html');
 
     expect(result).toBe(expected);
   });
 
-  it('should return fetched file', async () => {
+  it('should return file is exists', async () => {
     const response = await loader(url, tempDir);
-    const result = fs.readFileSync(response, { encoding: 'utf-8' });
-    const expected = fs.readFileSync(fileData, { encoding: 'utf-8' });
+    const result = fs.existsSync(response);
 
-    expect(result).toBe(expected);
+    expect(result).toBeTruthy();
   });
 
   it('should return error', async () => {
