@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import fetchFile from './fetchFile';
+import request from './request';
 import getName from './getName';
 
 // https://ru.hexlet.io/courses -> ru-hexlet-io-courses.html
@@ -22,7 +22,7 @@ const loader = async (url, folder) => {
 
   try {
     // download html
-    const fileData = await fetchFile(url, 'text');
+    const fileData = await request(url, 'text');
     fs.writeFileSync(filePath, fileData);
 
     // create directory
