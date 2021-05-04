@@ -2,17 +2,17 @@ import getName from '../src/getName';
 
 describe('getName', () => {
   it(`should return name for string`, () => {
-    const str = 'ru.hexlet.io/courses';
+    const str = 'rustamyusupov.github.io/nerds';
     const result = getName(str);
-    const expected = 'ru-hexlet-io-courses';
+    const expected = 'rustamyusupov-github-io-nerds';
 
     expect(result).toBe(expected);
   });
 
   it('should return name for long string', () => {
-    const str = 'ru.hexlet.io/assets/professions/nodejs';
+    const str = 'rustamyusupov.github.io/img/index-features1';
     const result = getName(str);
-    const expected = 'ru-hexlet-io-assets-professions-nodejs';
+    const expected = 'rustamyusupov-github-io-img-index-features1';
 
     expect(result).toBe(expected);
   });

@@ -4,7 +4,7 @@ import path from 'path';
 
 import loader from '../src/index';
 
-const url = 'https://ru.hexlet.io/courses';
+const url = 'http://rustamyusupov.github.io/nerds';
 
 describe('index loader', () => {
   let tempDir = '';
@@ -17,7 +17,7 @@ describe('index loader', () => {
 
   it('should return filename', async () => {
     const result = await loader(url, tempDir);
-    const expected = path.join(tempDir, 'ru-hexlet-io-courses.html');
+    const expected = path.join(tempDir, 'rustamyusupov-github-io-nerds.htmla'); // ?
 
     expect(result).toBe(expected);
   });
