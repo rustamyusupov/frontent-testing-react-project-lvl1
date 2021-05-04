@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const fetchFile = async (url, responseType) => {
+const request = async (url, responseType) => {
   try {
     const response = await axios.get(url, { responseType });
     const result = response.data;
@@ -11,4 +11,4 @@ const fetchFile = async (url, responseType) => {
   }
 };
 
-export default fetchFile;
+export default request;
