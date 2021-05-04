@@ -15,7 +15,7 @@
     "dist"
   ],
   "scripts": {
-    "start": "npx babel-node -- src/bin/page-loader.js -o ../temp https://www.strava.com/about",
+    "start": "npx babel-node -- src/bin/page-loader.js -o ../temp http://rustamyusupov.github.io/nerds",
     "prebuild": "rm -rf dist",
     "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
     "lint": "eslint .",
