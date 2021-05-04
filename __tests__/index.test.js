@@ -15,7 +15,8 @@ const responseStatuses = {
   ok: 200,
   serverError: 500,
 };
-const fileName = 'rustamyusupov-github-io-nerds.html';
+
+const getFixture = (fileName) => path.join(__dirname, '../__fixtures__', fileName);
 
 describe('index loader', () => {
   let tempDir = '';
@@ -30,7 +31,7 @@ describe('index loader', () => {
   afterAll(() => nock.enableNetConnect());
 
   it('should return filename', async () => {
-    nock(origin).get(pathname).reply(responseStatuses.ok, fileName);
+    nock(origin).get(pathname).reply(responseStatuses.ok, 'rustamyusupov-github-io-nerds.html');
 
     const result = await loader(url, tempDir);
     const expected = path.join(tempDir, 'rustamyusupov-github-io-nerds.html');
@@ -38,13 +39,36 @@ describe('index loader', () => {
     expect(result).toBe(expected);
   });
 
-  it('should return file is exists', async () => {
-    nock(origin).get(pathname).reply(responseStatuses.ok);
+  it('should return html', async () => {
+    nock(origin).get(pathname).replyWithFile(responseStatuses.ok, getFixture('index.html'));
 
     const response = await loader(url, tempDir);
-    const result = fs.existsSync(response);
+    const result = fs.readFileSync(response, 'utf-8');
+    const expected = fs.readFileSync(getFixture('result.html'), 'utf-8');
 
-    expect(result).toBeTruthy();
+    expect(result).toBe(expected);
+  });
+
+  it('should return images', async () => {
+    nock(origin)
+      .get(pathname)
+      .replyWithFile(responseStatuses.ok, getFixture('index.html'))
+      .get(/[img|css|js]\/.*/)
+      .reply((uri) => [responseStatuses.ok, fs.readFileSync(getFixture(uri))]);
+
+    await loader(url, tempDir);
+
+    ['index-features1.png', 'index-features2.png', 'index-features3.png'].forEach((name) => {
+      const imgPath = path.join(
+        tempDir,
+        'rustamyusupov-github-io-nerds_files',
+        `rustamyusupov-github-io-img-${name}`
+      );
+      const expected = fs.readFileSync(getFixture(`img/${name}`), 'utf-8');
+      const result = fs.readFileSync(imgPath);
+
+      expect(result).toBe(expected);
+    });
   });
 
   it('should return empty string', async () => {
