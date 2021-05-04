@@ -3,10 +3,7 @@ import path from 'path';
 
 import request from './request';
 import getName from './getName';
-
-// https://ru.hexlet.io/courses -> ru-hexlet-io-courses.html
-// https://ru.hexlet.io/courses -> ru-hexlet-io-courses_files
-// /assets/professions/nodejs.png -> ru-hexlet-io-assets-professions-nodejs.png
+import replaceLinks from './replaceLinks';
 
 const loader = async (url, folder) => {
   if (!url) {
@@ -16,27 +13,31 @@ const loader = async (url, folder) => {
   const { host, pathname } = new URL(url);
   const name = getName(`${host}${pathname}`);
   const htmlName = `${name}.html`;
-  const filePath = path.resolve(__dirname, folder, htmlName);
   const filesName = `${name}_files`;
-  const dirPath = path.resolve(__dirname, folder, filesName);
+  const htmlPath = path.resolve(__dirname, folder, htmlName);
+  const filesPath = path.resolve(__dirname, folder, filesName);
 
   try {
     // download html
-    const fileData = await request(url, 'text');
-    fs.writeFileSync(filePath, fileData);
+    const htmlData = await request(url, 'text');
 
     // create directory
-    if (!fs.existsSync(dirPath)) {
-      fs.mkdirSync(dirPath);
+    if (!fs.existsSync(filesPath)) {
+      fs.mkdirSync(filesPath);
     }
 
     // download resource files (images)
+    const { data, links } = replaceLinks(htmlData, url);
+
+    fs.writeFileSync(htmlPath, data);
+    console.log(links);
+
     // replace urls for resources
   } catch (error) {
     throw new Error(error);
   }
 
-  return filePath;
+  return htmlPath;
 };
 
 export default loader;
