@@ -11,8 +11,8 @@ const run = () => {
     .version(version)
     .option('-o, --output [folder]', 'output folder', '.')
     .arguments('<url>')
-    .action(async (url) => {
-      const file = await loader(url, program.output);
+    .action(async (url, argv) => {
+      const file = await loader(url, argv.output);
 
       // eslint-disable-next-line no-console
       console.log(file);
