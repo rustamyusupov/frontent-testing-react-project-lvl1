@@ -41,56 +41,64 @@ describe('index loader', () => {
     expect(result).toBe(expected);
   });
 
-  it('should return html', async () => {
-    nock(origin)
-      .get(pathname)
-      .reply(responseStatuses.ok, htmlFile)
-      .get(/[img|css|js]\/.*/)
-      .reply((uri) => [responseStatuses.ok, fs.readFileSync(getFixture(uri), 'utf-8')]);
-
-    await loader(url, tempDir);
-
-    const filePath = path.join(tempDir, 'rustamyusupov-github-io-nerds.html');
-    const result = fs.readFileSync(filePath, 'utf-8');
-    const expected = fs.readFileSync(getFixture('result.html'), 'utf-8');
-
-    expect(result).toBe(expected);
-  });
-
   it('should return files', async () => {
-    // const filePaths = [
-    //   '/css/style.min.css',
-    //   '/img/index-features1.png',
-    //   '/img/index-features2.png',
-    //   '/img/index-features3.png',
-    //   '/js/script.min.js',
-    // ];
+    const getFile = (name) => fs.readFileSync(getFixture(`${pathname}${name}`), 'utf-8');
+    const files = {
+      css: getFile('/css/style.min.css'),
+      img1: getFile('/img/index-features1.png'),
+      img2: getFile('/img/index-features2.png'),
+      img3: getFile('/img/index-features3.png'),
+      js: getFile('/js/script.min.js'),
+    };
 
     nock(origin)
       .get(pathname)
       .reply(responseStatuses.ok, htmlFile)
-      .get(/[img|css|js]\/.*/)
-      .reply((uri) => [responseStatuses.ok, fs.readFileSync(getFixture(uri), 'utf-8')]);
+      .get(/css\/style.min.css/)
+      .reply(responseStatuses.ok, files.css)
+      .get(/img\/index-features1.png/)
+      .reply(responseStatuses.ok, files.img1)
+      .get(/img\/index-features2.png/)
+      .reply(responseStatuses.ok, files.img2)
+      .get(/img\/index-features3.png/)
+      .reply(responseStatuses.ok, files.img3)
+      .get(/js\/script.min.js/)
+      .reply(responseStatuses.ok, files.js);
+
+    // TODO: how to do this?
+    // .get(/(js|css|img)\/.*/)
+    // .reply((uri) => [responseStatuses.ok, fs.readFileSync(getFixture(uri), 'utf-8')]);
 
     await loader(url, tempDir);
 
-    expect(true).toBeTruthy();
+    const htmlPath = path.join(tempDir, 'rustamyusupov-github-io-nerds.html');
+    const htmlResult = await fs.promises.readFile(htmlPath, 'utf-8');
+    const htmlExpected = await fs.promises.readFile(getFixture('result.html'), 'utf-8');
 
-    // TODO: I don't understand what's going on
-    // filePaths.forEach(async (file) => {
-    //   const ext = path.extname(file);
-    //   const withoutExt = file.replace(ext, '');
-    //   const name = getName(withoutExt);
-    //   const filePath = path.join(
-    //     tempDir,
-    //     'rustamyusupov-github-io-nerds_files',
-    //     `rustamyusupov-github-io${name}${ext}`
-    //   );
-    //   const result = fs.readFileSync(filePath, 'utf-8');
-    //   const expected = fs.readFileSync(getFixture(`${pathname}${file}`), 'utf-8');
+    expect(htmlResult).toBe(htmlExpected);
 
-    //   expect(result).toBe(expected);
-    // });
+    const filePaths = [
+      '/css/style.min.css',
+      '/img/index-features1.png',
+      '/img/index-features2.png',
+      '/img/index-features3.png',
+      '/js/script.min.js',
+    ];
+
+    filePaths.forEach((file) => {
+      const ext = path.extname(file);
+      const withoutExt = file.replace(ext, '');
+      const name = getName(withoutExt);
+      const filePath = path.join(
+        tempDir,
+        'rustamyusupov-github-io-nerds_files',
+        `rustamyusupov-github-io${name}${ext}`
+      );
+      const result = fs.readFileSync(filePath, 'utf-8');
+      const expected = fs.readFileSync(getFixture(`${pathname}${file}`), 'utf-8');
+
+      expect(result).toBe(expected);
+    });
   });
 
   it('should return empty string', async () => {
