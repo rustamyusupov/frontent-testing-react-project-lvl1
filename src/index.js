@@ -1,9 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 
-import request from './request';
+import downloadResources from './downloadResources';
 import getName from './getName';
 import replaceLinks from './replaceLinks';
+import request from './request';
 
 const loader = async (url, folder) => {
   if (!url) {
@@ -18,21 +19,17 @@ const loader = async (url, folder) => {
   const filesPath = path.resolve(__dirname, folder, filesName);
 
   try {
-    // download html
     const htmlData = await request(url, 'text');
 
-    // create directory
     if (!fs.existsSync(filesPath)) {
       fs.mkdirSync(filesPath);
     }
 
-    // download resource files (images)
     const { data, links } = replaceLinks(htmlData, url);
 
     fs.writeFileSync(htmlPath, data);
-    console.log(links);
 
-    // replace urls for resources
+    await downloadResources(links, url, filesPath);
   } catch (error) {
     throw new Error(error);
   }
