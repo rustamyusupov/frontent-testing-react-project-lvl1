@@ -12,13 +12,18 @@ const run = () => {
     .option('-o, --output [folder]', 'output folder', '.')
     .arguments('<url>')
     .action(async (url, argv) => {
-      const file = await loader(url, argv.output);
+      try {
+        const file = await loader(url, argv.output);
 
-      // eslint-disable-next-line no-console
-      console.log(file);
-    });
-
-  program.parse(process.argv);
+        // eslint-disable-next-line no-console
+        console.log(file);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error.message);
+        process.exit(1);
+      }
+    })
+    .parse(process.argv);
 };
 
 run();
