@@ -58,13 +58,13 @@ describe('index loader', () => {
   });
 
   it('should return files', async () => {
-    const filePaths = [
-      '/css/style.min.css',
-      '/img/index-features1.png',
-      '/img/index-features2.png',
-      '/img/index-features3.png',
-      '/js/script.min.js',
-    ];
+    // const filePaths = [
+    //   '/css/style.min.css',
+    //   '/img/index-features1.png',
+    //   '/img/index-features2.png',
+    //   '/img/index-features3.png',
+    //   '/js/script.min.js',
+    // ];
 
     nock(origin)
       .get(pathname)
@@ -76,7 +76,7 @@ describe('index loader', () => {
 
     expect(true).toBeTruthy();
 
-    // TODO: I don't what is going on
+    // TODO: I don't understand what's going on
     // filePaths.forEach(async (file) => {
     //   const ext = path.extname(file);
     //   const withoutExt = file.replace(ext, '');
