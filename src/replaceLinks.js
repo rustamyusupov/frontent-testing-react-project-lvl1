@@ -28,7 +28,7 @@ const replaceLinks = (data, url, log) => {
         return;
       }
 
-      log(`replace link ${value}`);
+      log(`replace link ${value}, host: ${host}, lhost: ${link.host}`);
       $(el).attr(attr, newSrc);
       links.push(value);
     })
