@@ -18,18 +18,15 @@ const replaceLinks = (data, url, log) => {
   Object.entries(map).forEach(([tag, attr]) =>
     $(tag).each((_, el) => {
       const value = $(el).attr(attr).replace(/\/\//g, '/');
-
-      log(`replace link ${value}`);
-
       const ext = path.extname(value);
       const withoutExt = value.replace(ext, '');
       const name = getName(`${host}/${withoutExt}`);
       const newSrc = `${folder}_files/${name}${ext}`;
-
       const link = new URL(value, origin);
 
       if (link.host !== host) return;
 
+      log(`replace link ${value}`);
       $(el).attr(attr, newSrc);
       links.push(value);
     })
