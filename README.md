@@ -6,4 +6,4 @@
 Command-line tool for downloading pages from the Internet
 
 ## Demo
-https://asciinema.org/a/SuHkMOVz7SOSzbV6BAUwpblp0
+[![asciicast](https://asciinema.org/a/SuHkMOVz7SOSzbV6BAUwpblp0.svg)](https://asciinema.org/a/SuHkMOVz7SOSzbV6BAUwpblp0)
