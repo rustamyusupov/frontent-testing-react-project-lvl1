@@ -24,14 +24,16 @@ const htmlFile = fs.readFileSync(getFixture(`${pathname}/index.html`), 'utf-8');
 describe('index loader', () => {
   let tempDir = '';
 
-  beforeAll(() => nock.disableNetConnect());
-  beforeEach(() => {
+  beforeAll(() => {
     const dirPath = path.join(os.tmpdir(), 'page-loader-');
 
+    nock.disableNetConnect();
     tempDir = fs.mkdtempSync(dirPath);
   });
-  afterEach(() => nock.cleanAll());
-  afterAll(() => nock.enableNetConnect());
+  afterAll(() => {
+    nock.enableNetConnect();
+    nock.cleanAll();
+  });
 
   it('should return filename', async () => {
     nock(origin).get(pathname).reply(responseStatuses.ok, 'rustamyusupov-github-io-nerds.html');
