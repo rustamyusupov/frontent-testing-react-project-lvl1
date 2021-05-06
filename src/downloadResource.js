@@ -4,11 +4,13 @@ import request from './request';
 import getName from './getName';
 
 const downloadResource = async (link, url, filesPath, log) => {
-  log(`fetch ${link}`);
-
   const { protocol, host, pathname } = new URL(url);
-  const newUrl = `${host}${pathname}/${link}`.replace(/\/\//g, '/');
-  const data = await request(`${protocol}//${newUrl}`, 'arraybuffer');
+  const href = `${host}${pathname}/${link}`.replace(/\/\//g, '/');
+  const newUrl = `${protocol}//${href}`;
+
+  log(`fetch ${newUrl}`);
+
+  const data = await request(newUrl, 'arraybuffer');
   const name = `${host}/${link}`.replace(/\/\//g, '/');
   const fileName = getName(name);
   const filePath = `${filesPath}/${fileName}`;
