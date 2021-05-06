@@ -17,7 +17,7 @@ const replaceLinks = (data, url) => {
 
   Object.entries(map).forEach(([tag, attr]) =>
     $(tag).each((_, el) => {
-      const value = $(el).attr(attr);
+      const value = $(el).attr(attr).replace(/\/\//g, '/');
       const ext = path.extname(value);
       const withoutExt = value.replace(ext, '');
       const name = getName(`${host}/${withoutExt}`);
