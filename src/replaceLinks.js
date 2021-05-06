@@ -12,7 +12,7 @@ const map = {
 const replaceLinks = (data, url) => {
   const links = [];
   const $ = cheerio.load(data);
-  const { host, pathname } = new URL(url);
+  const { host, pathname, origin } = new URL(url);
   const folder = getName(`${host}${pathname}`);
 
   Object.entries(map).forEach(([tag, attr]) =>
@@ -23,10 +23,12 @@ const replaceLinks = (data, url) => {
       const name = getName(`${host}/${withoutExt}`);
       const newSrc = `${folder}_files/${name}${ext}`;
 
-      if (ext) {
-        $(el).attr(attr, newSrc);
-        links.push(value);
-      }
+      const link = new URL(value, origin);
+
+      if (link.host !== host) return;
+
+      $(el).attr(attr, newSrc);
+      links.push(value);
     })
   );
 
