@@ -16,8 +16,7 @@ const loader = async (url, folder, log = logger) => {
     return '';
   }
 
-  const { host, pathname } = new URL(url);
-  const name = getName(`${host}${pathname}`);
+  const name = getName(url);
   const htmlName = `${name}.html`;
   const filesName = `${name}_files`;
   const htmlPath = path.resolve(__dirname, folder, htmlName);
@@ -25,7 +24,6 @@ const loader = async (url, folder, log = logger) => {
 
   log(`fetch page ${url}`);
   const htmlData = await request(url, 'text');
-  log(htmlData);
 
   log('replace links');
   const { data, links } = replaceLinks(htmlData, url, log);
@@ -42,7 +40,7 @@ const loader = async (url, folder, log = logger) => {
     throw new Error(error);
   }
 
-  const promises = links.map((link) => downloadResource(link, url, filesPath, log));
+  const promises = links.map((link) => downloadResource(link, filesPath, log));
   await Promise.all(promises);
 
   return htmlPath;

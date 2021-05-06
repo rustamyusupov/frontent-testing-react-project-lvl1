@@ -11,21 +11,23 @@ const map = {
 const replaceLinks = (data, url) => {
   const links = [];
   const $ = cheerio.load(data);
-  const { host, pathname } = new URL(url);
-  const folder = getName(`${host}${pathname}`);
+  const { host, origin } = new URL(url);
+  const folder = getName(url);
 
   Object.entries(map).forEach(([tag, attr]) =>
     $(tag).each((_, el) => {
-      const value = $(el).attr(attr).replace(/\/\//g, '/');
-      const name = getName(`${host}/${value}`);
-      const newSrc = `${folder}_files/${name}`;
+      const value = $(el).attr(attr);
+      const link = new URL(value, origin);
 
-      if (value.includes('http')) {
+      if (link.host !== host) {
         return;
       }
 
+      const name = getName(link.toString());
+      const newSrc = `${folder}_files/${name}`;
+
       $(el).attr(attr, newSrc);
-      links.push(value);
+      links.push(link.toString());
     })
   );
 

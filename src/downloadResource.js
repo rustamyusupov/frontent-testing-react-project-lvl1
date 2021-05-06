@@ -3,16 +3,11 @@ import fs from 'fs';
 import request from './request';
 import getName from './getName';
 
-const downloadResource = async (link, url, filesPath, log) => {
-  const { protocol, host, pathname } = new URL(url);
-  const href = `${host}${pathname}/${link}`.replace(/\/\//g, '/');
-  const newUrl = `${protocol}//${href}`;
+const downloadResource = async (link, filesPath, log) => {
+  log(`fetch ${link}`);
 
-  log(`fetch ${newUrl}`);
-
-  const data = await request(newUrl, 'arraybuffer');
-  const name = `${host}/${link}`.replace(/\/\//g, '/');
-  const fileName = getName(name);
+  const data = await request(link, 'arraybuffer');
+  const fileName = getName(link);
   const filePath = `${filesPath}/${fileName}`;
 
   log(`save ${fileName}`);
