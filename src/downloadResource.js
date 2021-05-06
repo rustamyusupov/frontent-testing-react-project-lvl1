@@ -5,7 +5,7 @@ import request from './request';
 import getName from './getName';
 
 const downloadResource = async (link, url, filesPath, log) => {
-  log(`fetch ${link}`);
+  log(`fetch ${url}/${link}`);
 
   const { host } = new URL(url);
   const data = await request(`${url}/${link}`, 'arraybuffer');
