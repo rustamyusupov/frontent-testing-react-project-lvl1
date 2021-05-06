@@ -23,26 +23,26 @@ const loader = async (url, folder, log = logger) => {
   const htmlPath = path.resolve(__dirname, folder, htmlName);
   const filesPath = path.resolve(__dirname, folder, filesName);
 
-  try {
-    log(`fetch page ${url}`);
-    const htmlData = await request(url, 'text');
+  log(`fetch page ${url}`);
+  const htmlData = await request(url, 'text');
 
+  log('replace links');
+  const { data, links } = replaceLinks(htmlData, url);
+
+  try {
     if (!fs.existsSync(filesPath)) {
       log(`create directory ${filesPath}`);
       fs.mkdirSync(filesPath);
     }
 
-    log('replace links');
-    const { data, links } = replaceLinks(htmlData, url);
-
     log(`save page ${htmlPath}`);
     fs.writeFileSync(htmlPath, data);
-
-    const promises = links.map((link) => downloadResource(link, url, filesPath, log));
-    await Promise.all(promises);
   } catch (error) {
     throw new Error(error);
   }
+
+  const promises = links.map((link) => downloadResource(link, url, filesPath, log));
+  await Promise.all(promises);
 
   return htmlPath;
 };
