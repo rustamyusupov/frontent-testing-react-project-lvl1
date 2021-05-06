@@ -19,7 +19,6 @@ const responseStatuses = {
 };
 
 const getFixture = (fileName) => path.join(__dirname, '../__fixtures__', fileName);
-const htmlFile = fs.readFileSync(getFixture(`${pathname}/index.html`), 'utf-8');
 
 describe('index loader', () => {
   let tempDir = '';
@@ -45,13 +44,14 @@ describe('index loader', () => {
   });
 
   it('should return files', async () => {
-    const getFile = (name) => fs.readFileSync(getFixture(`${pathname}${name}`), 'utf-8');
+    const htmlFile = fs.readFileSync(getFixture('index.html'), 'utf-8');
+    const getFile = (name) => fs.readFileSync(getFixture(name), 'utf-8');
     const files = {
-      css: getFile('/css/style.min.css'),
-      img1: getFile('/img/index-features1.png'),
-      img2: getFile('/img/index-features2.png'),
-      img3: getFile('/img/index-features3.png'),
-      js: getFile('/js/script.min.js'),
+      css: getFile('css/style.min.css'),
+      img1: getFile('img/index-features1.png'),
+      img2: getFile('img/index-features2.png'),
+      img3: getFile('img/index-features3.png'),
+      js: getFile('js/script.min.js'),
     };
 
     nock(origin)
@@ -98,7 +98,7 @@ describe('index loader', () => {
         `rustamyusupov-github-io${name}${ext}`
       );
       const result = fs.readFileSync(filePath, 'utf-8');
-      const expected = fs.readFileSync(getFixture(`${pathname}${file}`), 'utf-8');
+      const expected = fs.readFileSync(getFixture(file), 'utf-8');
 
       expect(result).toBe(expected);
     });
