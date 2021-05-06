@@ -1,5 +1,4 @@
 import fs from 'fs';
-import path from 'path';
 
 import request from './request';
 import getName from './getName';
@@ -9,10 +8,8 @@ const downloadResource = async (link, url, filesPath, log) => {
 
   const { host } = new URL(url);
   const data = await request(`${url}/${link}`, 'arraybuffer');
-  const ext = path.extname(link);
-  const withoutExt = link.replace(ext, '');
-  const fileName = getName(`${host}/${withoutExt}`);
-  const filePath = `${filesPath}/${fileName}${ext}`;
+  const fileName = getName(`${host}/${link}`);
+  const filePath = `${filesPath}/${fileName}`;
 
   log(`save ${fileName}`);
   await fs.promises.writeFile(filePath, data);

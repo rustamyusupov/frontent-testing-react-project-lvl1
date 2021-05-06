@@ -1,5 +1,4 @@
 import cheerio from 'cheerio';
-import path from 'path';
 
 import getName from './getName';
 
@@ -9,7 +8,7 @@ const map = {
   script: 'src',
 };
 
-const replaceLinks = (data, url, log) => {
+const replaceLinks = (data, url) => {
   const links = [];
   const $ = cheerio.load(data);
   const { host, pathname } = new URL(url);
@@ -18,17 +17,13 @@ const replaceLinks = (data, url, log) => {
   Object.entries(map).forEach(([tag, attr]) =>
     $(tag).each((_, el) => {
       const value = $(el).attr(attr).replace(/\/\//g, '/');
-      const ext = path.extname(value);
-      const withoutExt = value.replace(ext, '');
-      const name = getName(`${host}/${withoutExt}`);
-      const newSrc = `${folder}_files/${name}${ext}`;
-      const link = new URL(value, url);
+      const name = getName(`${host}/${value}`);
+      const newSrc = `${folder}_files/${name}`;
 
-      if (link.host !== host) {
+      if (value.includes('http')) {
         return;
       }
 
-      log(`replace link ${value}, host: ${host}, lhost: ${link.host}`);
       $(el).attr(attr, newSrc);
       links.push(value);
     })

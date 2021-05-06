@@ -17,6 +17,14 @@ describe('getName', () => {
     expect(result).toBe(expected);
   });
 
+  it('should return name for double extension', () => {
+    const str = 'rustamyusupov.github.io/css/style.min.css';
+    const result = getName(str);
+    const expected = 'rustamyusupov-github-io-css-style-min.css';
+
+    expect(result).toBe(expected);
+  });
+
   it('should return empty string', () => {
     const result = getName('');
 

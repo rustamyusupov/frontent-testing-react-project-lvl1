@@ -3,8 +3,8 @@ import fs from 'fs';
 import nock from 'nock';
 import os from 'os';
 import path from 'path';
-import getName from '../src/getName';
 
+import getName from '../src/getName';
 import loader from '../src/index';
 
 axios.defaults.adapter = require('axios/lib/adapters/http');
@@ -89,13 +89,11 @@ describe('index loader', () => {
     ];
 
     filePaths.forEach((file) => {
-      const ext = path.extname(file);
-      const withoutExt = file.replace(ext, '');
-      const name = getName(withoutExt);
+      const name = getName(file);
       const filePath = path.join(
         tempDir,
         'rustamyusupov-github-io-nerds_files',
-        `rustamyusupov-github-io${name}${ext}`
+        `rustamyusupov-github-io${name}`
       );
       const result = fs.readFileSync(filePath, 'utf-8');
       const expected = fs.readFileSync(getFixture(file), 'utf-8');
