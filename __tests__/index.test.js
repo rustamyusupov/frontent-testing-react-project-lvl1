@@ -47,26 +47,26 @@ describe('index loader', () => {
     const htmlFile = fs.readFileSync(getFixture('index.html'), 'utf-8');
     const getFile = (name) => fs.readFileSync(getFixture(name), 'utf-8');
     const files = {
-      css: getFile('css/style.min.css'),
-      img1: getFile('img/index-features1.png'),
-      img2: getFile('img/index-features2.png'),
-      img3: getFile('img/index-features3.png'),
-      js: getFile('js/script.min.js'),
-    };
+      css: ['/nerds/css/style.min.css', getFile('css/style.min.css')],
+      img1: ['/nerds/img/index-features1.png', getFile('img/index-features1.png')],
+      img2: ['/nerds/img/index-features2.png', getFile('img/index-features2.png')],
+      img3: ['/nerds/img/index-features3.png', getFile('img/index-features3.png')],
+      js: ['/nerds/js/script.min.js', getFile('js/script.min.js')]
+   };
 
     nock(origin)
       .get(pathname)
       .reply(responseStatuses.ok, htmlFile)
-      .get(/style.min.css/)
-      .reply(responseStatuses.ok, files.css)
-      .get(/index-features1.png/)
-      .reply(responseStatuses.ok, files.img1)
-      .get(/index-features2.png/)
-      .reply(responseStatuses.ok, files.img2)
-      .get(/index-features3.png/)
-      .reply(responseStatuses.ok, files.img3)
-      .get(/script.min.js/)
-      .reply(responseStatuses.ok, files.js);
+      .get(files.css[0])
+      .reply(responseStatuses.ok, files.css[1])
+      .get(files.img1[0])
+      .reply(responseStatuses.ok, files.img1[1])
+      .get(files.img2[0])
+      .reply(responseStatuses.ok, files.img2[1])
+      .get(files.img3[0])
+      .reply(responseStatuses.ok, files.img3[1])
+      .get(files.js[0])
+      .reply(responseStatuses.ok, files.js[1]);
 
     // TODO: how to do this?
     // .get(/(js|css|img)\/.*/)
