@@ -25,6 +25,7 @@ const loader = async (url, folder, log = logger) => {
 
   log(`fetch page ${url}`);
   const htmlData = await request(url, 'text');
+  log(htmlData);
 
   log('replace links');
   const { data, links } = replaceLinks(htmlData, url, log);
