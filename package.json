@@ -8,6 +8,7 @@
     "type": "git",
     "url": "git+https://github.com/rustamyusupov/frontent-testing-react-project-lvl1.git"
   },
+  "main": "src/index.js",
   "bin": {
     "page-loader": "src/bin/page-loader.js"
   },
