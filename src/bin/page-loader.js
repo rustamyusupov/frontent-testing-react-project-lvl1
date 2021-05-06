@@ -15,10 +15,8 @@ const run = () => {
       try {
         const file = await loader(url, argv.output);
 
-        // eslint-disable-next-line no-console
         console.log(file);
       } catch (error) {
-        // eslint-disable-next-line no-console
         console.error(error.message);
         process.exit(1);
       }
