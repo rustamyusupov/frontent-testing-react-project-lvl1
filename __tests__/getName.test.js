@@ -10,9 +10,9 @@ describe('getName', () => {
   });
 
   it('should return name for long string', () => {
-    const str = 'rustamyusupov.github.io/img/index-features1';
+    const str = 'rustamyusupov.github.io/img/index-features1.img';
     const result = getName(str);
-    const expected = 'rustamyusupov-github-io-img-index-features1';
+    const expected = 'rustamyusupov-github-io-img-index-features1.img';
 
     expect(result).toBe(expected);
   });
