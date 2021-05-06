@@ -5,7 +5,7 @@ import request from './request';
 import getName from './getName';
 
 const downloadResource = async (link, url, filesPath, log) => {
-  log(`fetch resource ${link}`);
+  log(`fetch ${link}`);
 
   const { host } = new URL(url);
   const data = await request(`${url}/${link}`, 'arraybuffer');
@@ -14,7 +14,7 @@ const downloadResource = async (link, url, filesPath, log) => {
   const fileName = getName(`${host}/${withoutExt}`);
   const filePath = `${filesPath}/${fileName}${ext}`;
 
-  log(`save resource ${fileName}`);
+  log(`save ${fileName}`);
   await fs.promises.writeFile(filePath, data);
 };
 
