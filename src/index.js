@@ -27,7 +27,7 @@ const loader = async (url, folder, log = logger) => {
   const htmlData = await request(url, 'text');
 
   log('replace links');
-  const { data, links } = replaceLinks(htmlData, url);
+  const { data, links } = replaceLinks(htmlData, url, log);
 
   try {
     if (!fs.existsSync(filesPath)) {

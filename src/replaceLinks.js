@@ -9,7 +9,7 @@ const map = {
   script: 'src',
 };
 
-const replaceLinks = (data, url) => {
+const replaceLinks = (data, url, log) => {
   const links = [];
   const $ = cheerio.load(data);
   const { host, pathname, origin } = new URL(url);
@@ -18,6 +18,9 @@ const replaceLinks = (data, url) => {
   Object.entries(map).forEach(([tag, attr]) =>
     $(tag).each((_, el) => {
       const value = $(el).attr(attr).replace(/\/\//g, '/');
+
+      log(`replace link ${value}`);
+
       const ext = path.extname(value);
       const withoutExt = value.replace(ext, '');
       const name = getName(`${host}/${withoutExt}`);
