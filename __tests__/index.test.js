@@ -57,15 +57,15 @@ describe('index loader', () => {
     nock(origin)
       .get(pathname)
       .reply(responseStatuses.ok, htmlFile)
-      .get(/css\/style.min.css/)
+      .get(/style.min.css/)
       .reply(responseStatuses.ok, files.css)
-      .get(/img\/index-features1.png/)
+      .get(/index-features1.png/)
       .reply(responseStatuses.ok, files.img1)
-      .get(/img\/index-features2.png/)
+      .get(/index-features2.png/)
       .reply(responseStatuses.ok, files.img2)
-      .get(/img\/index-features3.png/)
+      .get(/index-features3.png/)
       .reply(responseStatuses.ok, files.img3)
-      .get(/js\/script.min.js/)
+      .get(/script.min.js/)
       .reply(responseStatuses.ok, files.js);
 
     // TODO: how to do this?
