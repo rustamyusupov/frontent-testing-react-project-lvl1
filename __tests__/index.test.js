@@ -14,6 +14,7 @@ const pathname = '/nerds';
 const url = `${origin}${pathname}`;
 const responseStatuses = {
   ok: 200,
+  notFound: 404,
   serverError: 500,
 };
 
@@ -101,19 +102,27 @@ describe('index loader', () => {
     });
   });
 
-  it('should return empty string', async () => {
-    nock(origin).get(pathname).reply(responseStatuses.ok);
+  it('should reject with 404', async () => {
+    nock(origin).get('/notFound').reply(responseStatuses.notFound);
 
-    const result = await loader('', '');
+    const result = () => loader(`${origin}/notFound`, tempDir);
 
-    expect(result).toBe('');
+    await expect(result).rejects.toThrow('Error: Request failed with status code 404');
   });
 
-  it('should reject with error', async () => {
+  it('should reject with 500', async () => {
     nock(origin).get(pathname).reply(responseStatuses.serverError);
 
-    const result = () => loader(url, tempDir);
+    const result = loader(url, tempDir);
 
-    await expect(result).rejects.toThrow(Error);
+    await expect(result).rejects.toThrow('Error: Request failed with status code 500');
+  });
+
+  it('should return error for wrong folder', async () => {
+    nock(origin).get(pathname).reply(responseStatuses.ok);
+
+    const result = loader(url, 'wrongFolder');
+
+    await expect(result).rejects.toThrow('Error: ENOENT: no such file or directory');
   });
 });
