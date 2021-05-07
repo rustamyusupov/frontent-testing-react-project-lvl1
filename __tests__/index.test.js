@@ -88,11 +88,12 @@ describe('index loader', () => {
   });
 
   it('should reject with 404', async () => {
-    nock(origin).get('/notFound').reply(responseStatuses.notFound);
+    const scope = nock(origin).get('/notFound').reply(responseStatuses.notFound);
 
     const result = () => loader(`${origin}/notFound`, tempDir);
 
     await expect(result).rejects.toThrow(Error);
+    scope.done();
   });
 
   it('should return error for wrong folder', async () => {
