@@ -14,7 +14,7 @@ const replaceLinks = (data, url) => {
   const { host, origin } = new URL(url);
   const folder = getFolderName(url);
 
-  Object.entries(map).forEach(([tag, attr]) =>
+  Object.entries(map).forEach(([tag, attr]) => {
     $(tag).each((_, el) => {
       const value = $(el).attr(attr);
       const link = new URL(value, origin);
@@ -28,8 +28,8 @@ const replaceLinks = (data, url) => {
 
       $(el).attr(attr, path);
       links.push({ href: link.toString(), name });
-    })
-  );
+    });
+  });
 
   return { data: $.html(), links };
 };

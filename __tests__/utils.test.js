@@ -1,7 +1,7 @@
 import { getFileName, getFolderName } from '../src/utils';
 
 describe('utils', () => {
-  it(`should return html file name`, () => {
+  it('should return html file name', () => {
     const url = 'http://rustamyusupov.github.io/nerds';
     const result = getFileName(url);
     const expected = 'rustamyusupov-github-io-nerds.html';
