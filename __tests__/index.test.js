@@ -34,22 +34,31 @@ describe('index loader', () => {
 
   it('should return files', async () => {
     const htmlFile = await fs.promises.readFile(getFixture('index.html'), 'utf-8');
-    const cssFile = await fs.promises.readFile(getFixture('assets/application.css'), 'utf-8');
-    const jsFile = await fs.promises.readFile(getFixture('packs/js/runtime.js'), 'utf-8');
-    const imgFile = await fs.promises.readFile(
-      getFixture('assets/professions/nodejs.png'),
-      'utf-8'
-    );
+
+    const getFile = async (name) => {
+      const result = await fs.promises.readFile(getFixture(name), 'utf-8');
+
+      return result;
+    };
+
+    const files = {
+      html: ['/courses', await htmlFile],
+      css: ['/assets/application.css', await getFile('assets/application.css')],
+      img: ['/assets/professions/nodejs.png', await getFile('assets/professions/nodejs.png')],
+      js: ['/packs/js/runtime.js', await getFile('packs/js/runtime.js')],
+    };
 
     nock(origin)
       .get(pathname)
       .reply(responseStatuses.ok, htmlFile)
-      .get('/assets/application.css')
-      .reply(responseStatuses.ok, cssFile)
-      .get('/assets/professions/nodejs.png')
-      .reply(responseStatuses.ok, imgFile)
-      .get('/packs/js/runtime.js')
-      .reply(responseStatuses.ok, jsFile);
+      .get(files.html[0])
+      .reply(responseStatuses.ok, htmlFile)
+      .get(files.css[0])
+      .reply(responseStatuses.ok, files.css[1])
+      .get(files.img[0])
+      .reply(responseStatuses.ok, files.img[1])
+      .get(files.js[0])
+      .reply(responseStatuses.ok, files.js[1]);
 
     await loader(url, tempDir);
 
@@ -59,56 +68,23 @@ describe('index loader', () => {
 
     expect(htmlResult).toBe(htmlExpected);
 
-    const cssPath = path.join(
-      tempDir,
-      'ru-hexlet-io-courses_files',
-      getFileName(`${origin}/assets/application.css`)
-    );
-    const cssResult = await fs.promises.readFile(cssPath, 'utf-8');
-    const cssExpected = await fs.promises.readFile(getFixture('/assets/application.css'), 'utf-8');
+    const filePaths = [
+      '/assets/application.css',
+      '/assets/professions/nodejs.png',
+      '/packs/js/runtime.js',
+    ];
 
-    expect(cssResult).toBe(cssExpected);
+    const test = async (file) => {
+      const fileName = getFileName(`${origin}${file}`);
+      const filePath = path.join(tempDir, 'ru-hexlet-io-courses_files', fileName);
+      const result = await fs.promises.readFile(filePath, 'utf-8');
+      const expected = await fs.promises.readFile(getFixture(file), 'utf-8');
 
-    const imgPath = path.join(
-      tempDir,
-      'ru-hexlet-io-courses_files',
-      getFileName(`${origin}/assets/professions/nodejs.png`)
-    );
-    const imgResult = await fs.promises.readFile(imgPath, 'utf-8');
-    const imgExpected = await fs.promises.readFile(
-      getFixture('/assets/professions/nodejs.png'),
-      'utf-8'
-    );
+      expect(result).toBe(expected);
+    };
 
-    expect(imgResult).toBe(imgExpected);
-
-    const jsPath = path.join(
-      tempDir,
-      'ru-hexlet-io-courses_files',
-      getFileName(`${origin}/packs/js/runtime.js`)
-    );
-    const jsResult = await fs.promises.readFile(jsPath, 'utf-8');
-    const jsExpected = await fs.promises.readFile(getFixture('/packs/js/runtime.js'), 'utf-8');
-
-    expect(jsResult).toBe(jsExpected);
-
-    // const filePaths = [
-    //   '/assets/application.css',
-    //   '/assets/professions/nodejs.png',
-    //   '/packs/js/runtime.js',
-    // ];
-
-    // const test = async (file) => {
-    //   const fileName = getFileName(`${origin}${file}`);
-    //   const filePath = path.join(tempDir, 'ru-hexlet-io-courses_files', fileName);
-    //   const result = await fs.promises.readFile(filePath, 'utf-8');
-    //   const expected = await fs.promises.readFile(getFixture(file), 'utf-8');
-
-    //   expect(result).toBe(expected);
-    // };
-
-    // const promises = filePaths.map(test);
-    // await Promise.all(promises);
+    const promises = filePaths.map(test);
+    await Promise.all(promises);
   });
 
   it('should reject with 404', async () => {
@@ -122,7 +98,7 @@ describe('index loader', () => {
   it('should return error for wrong folder', async () => {
     nock(origin).get(pathname).reply(responseStatuses.ok);
 
-    const result = () => loader(url, path.join(tempDir, 'folder'));
+    const result = () => loader(url, `${tempDir}\folder`);
 
     await expect(result).rejects.toThrow();
   });
