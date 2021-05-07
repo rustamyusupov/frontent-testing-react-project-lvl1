@@ -93,7 +93,7 @@ describe('index loader', () => {
   it('should return error for wrong folder', async () => {
     nock(origin).get(pathname).reply(responseStatuses.ok);
 
-    const result = () => loader(url, `${tempDir}\\wrongFolder`);
+    const result = () => loader(url, `${tempDir}\folder`);
 
     await expect(result).rejects.toThrow();
   });
