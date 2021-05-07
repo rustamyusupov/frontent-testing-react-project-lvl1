@@ -39,8 +39,7 @@ const loader = async (url, folder, log = logger) => {
     throw new Error(error);
   }
 
-  log(data);
-  log(links);
+  log(htmlData);
   const promises = links.map(({ href, name }) =>
     downloadResource({ url: href, path: `${filesPath}/${name}`, log })
   );
