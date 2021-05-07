@@ -16,7 +16,7 @@ const replaceLinks = (data, url) => {
 
   Object.entries(map).forEach(([tag, attr]) =>
     $(tag).each((_, el) => {
-      const value = $(el).attr(attr);
+      const value = $(el).attr(attr).replace(/\/\//g, '/');
 
       if (value.includes('http')) {
         return;
