@@ -40,9 +40,9 @@ const loader = async (url, folder, log = logger) => {
     throw error;
   }
 
-  const promises = links.map(({ href, name }) => {
-    return downloadResource({ url: href, path: `${filesPath}/${name}`, log });
-  });
+  const promises = links.map(({ href, name }) =>
+    downloadResource({ url: href, path: `${filesPath}/${name}`, log })
+  );
   await Promise.all(promises);
 
   return htmlPath;
