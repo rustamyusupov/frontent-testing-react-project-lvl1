@@ -23,25 +23,14 @@ const getFixture = (fileName) => path.join(__dirname, '../__fixtures__', fileNam
 describe('index loader', () => {
   let tempDir = '';
 
-  beforeAll(() => {
+  beforeAll(() => nock.disableNetConnect());
+  beforeEach(() => {
     const dirPath = path.join(os.tmpdir(), 'page-loader-');
 
-    nock.disableNetConnect();
     tempDir = fs.mkdtempSync(dirPath);
   });
-  afterAll(() => {
-    nock.enableNetConnect();
-    nock.cleanAll();
-  });
-
-  it('should return filename', async () => {
-    nock(origin).get(pathname).reply(responseStatuses.ok, 'ru-hexlet-io-courses.html');
-
-    const result = await loader(url, tempDir);
-    const expected = path.join(tempDir, 'ru-hexlet-io-courses.html');
-
-    expect(result).toBe(expected);
-  });
+  afterEach(() => nock.cleanAll());
+  afterAll(() => nock.enableNetConnect());
 
   // it('should return files', async () => {
   //   const htmlFile = fs.readFileSync(getFixture('index.html'), 'utf-8');
@@ -101,11 +90,11 @@ describe('index loader', () => {
   //   await expect(result).rejects.toThrow(Error);
   // });
 
-  // it('should return error for wrong folder', async () => {
-  //   nock(origin).get(pathname).reply(responseStatuses.ok);
+  it('should return error for wrong folder', async () => {
+    nock(origin).get(pathname).reply(responseStatuses.ok);
 
-  //   const result = loader(url, `${tempDir}\\wrongFolder`);
+    const result = () => loader(url, `${tempDir}\\wrongFolder`);
 
-  //   await expect(result).rejects.toThrow();
-  // });
+    await expect(result).rejects.toThrow();
+  });
 });
