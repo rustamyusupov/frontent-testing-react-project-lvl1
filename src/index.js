@@ -20,7 +20,6 @@ const loader = async (url, folder, log = logger) => {
   const folderName = getFolderName(url);
   const htmlPath = path.resolve(__dirname, folder, htmlFile);
   const filesPath = path.resolve(__dirname, folder, folderName);
-  log({ url, htmlFile, folderName, htmlPath });
 
   log(`fetch page ${url}`);
   const htmlData = await request({ url, responseType: 'text', log });
