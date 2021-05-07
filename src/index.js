@@ -22,7 +22,7 @@ const loader = async (url, folder, log = logger) => {
   const filesPath = path.resolve(__dirname, folder, folderName);
 
   log(`fetch page ${url}`);
-  const htmlData = await request(url, 'text');
+  const htmlData = await request({ url, responseType: 'text', log });
 
   log('replace links');
   const { data, links } = replaceLinks(htmlData, url);
@@ -36,10 +36,10 @@ const loader = async (url, folder, log = logger) => {
     log(`save page ${htmlPath}`);
     fs.writeFileSync(htmlPath, data);
   } catch (error) {
-    throw new Error(error);
+    log(error);
+    throw error;
   }
 
-  log(htmlData, data, links);
   const promises = links.map(({ href, name }) =>
     downloadResource({ url: href, path: `${filesPath}/${name}`, log })
   );

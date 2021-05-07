@@ -98,7 +98,7 @@ describe('index loader', () => {
 
     const result = () => loader(`${origin}/notFound`, tempDir);
 
-    await expect(result).rejects.toThrow('Error: Request failed with status code 404');
+    await expect(result).rejects.toThrow('Request failed with status code 404');
   });
 
   it('should reject with 500', async () => {
@@ -106,7 +106,7 @@ describe('index loader', () => {
 
     const result = loader(url, tempDir);
 
-    await expect(result).rejects.toThrow('Error: Request failed with status code 500');
+    await expect(result).rejects.toThrow('Request failed with status code 500');
   });
 
   it('should return error for wrong folder', async () => {
@@ -114,6 +114,8 @@ describe('index loader', () => {
 
     const result = loader(url, 'wrongFolder');
 
-    await expect(result).rejects.toThrow('Error: ENOENT: no such file or directory');
+    await expect(result).rejects.toThrow(
+      "ENOENT: no such file or directory, mkdir '/Users/rustam/Projects/page-loader/src/wrongFolder/ru-hexlet-io-courses_files'"
+    );
   });
 });
