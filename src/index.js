@@ -26,6 +26,7 @@ const loader = async (url, folder, log = logger) => {
 
   log('replace links');
   const { data, links } = replaceLinks(htmlData, url);
+  log({ url, folder, htmlFile, folderName, htmlPath, filesPath, htmlData, data, links });
 
   try {
     log(`create directory ${filesPath}`);
