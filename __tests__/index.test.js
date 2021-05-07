@@ -24,17 +24,23 @@ describe('index loader', () => {
   let tempDir = '';
 
   beforeAll(() => nock.disableNetConnect());
-  beforeEach(() => {
+  beforeEach(async () => {
     const dirPath = path.join(os.tmpdir(), 'page-loader-');
 
-    tempDir = fs.mkdtempSync(dirPath);
+    tempDir = await fs.promises.mkdtemp(dirPath);
   });
   afterEach(() => nock.cleanAll());
   afterAll(() => nock.enableNetConnect());
 
   it('should return files', async () => {
-    const htmlFile = fs.readFileSync(getFixture('index.html'), 'utf-8');
-    const getFile = (name) => fs.readFileSync(getFixture(name), 'utf-8');
+    const htmlFile = await fs.promises.readFile(getFixture('index.html'), 'utf-8');
+
+    const getFile = async (name) => {
+      const result = await fs.promises.readFile(getFixture(name), 'utf-8');
+
+      return result;
+    };
+
     const files = {
       html: ['/courses', htmlFile],
       css: ['/assets/application.css', getFile('assets/application.css')],
@@ -54,10 +60,6 @@ describe('index loader', () => {
       .get(files.js[0])
       .reply(responseStatuses.ok, files.js[1]);
 
-    // TODO: how to do this?
-    // .get(/(js|css|img)\/.*/)
-    // .reply((uri) => [responseStatuses.ok, fs.readFileSync(getFixture(uri), 'utf-8')]);
-
     await loader(url, tempDir);
 
     const htmlPath = path.join(tempDir, getFileName(url));
@@ -75,8 +77,8 @@ describe('index loader', () => {
     // filePaths.forEach((file) => {
     //   const fileName = getFileName(`${origin}${file}`);
     //   const filePath = path.join(tempDir, 'ru-hexlet-io-courses_files', fileName);
-    //   const result = fs.readFileSync(filePath, 'utf-8');
-    //   const expected = fs.readFileSync(getFixture(file), 'utf-8');
+    //   const result = await fs.promises.readFile(filePath, 'utf-8');
+    //   const expected = await fs.promises.readFile(getFixture(file), 'utf-8');
 
     //   expect(result).toBe(expected);
     // });
