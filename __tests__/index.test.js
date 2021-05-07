@@ -9,8 +9,8 @@ import loader from '../src/index';
 
 axios.defaults.adapter = require('axios/lib/adapters/http');
 
-const origin = 'http://rustamyusupov.github.io';
-const pathname = '/nerds';
+const origin = 'https://site.com';
+const pathname = '/blog/about';
 const url = `${origin}${pathname}`;
 const responseStatuses = {
   ok: 200,
@@ -35,10 +35,10 @@ describe('index loader', () => {
   });
 
   it('should return filename', async () => {
-    nock(origin).get(pathname).reply(responseStatuses.ok, 'rustamyusupov-github-io-nerds.html');
+    nock(origin).get(pathname).reply(responseStatuses.ok, getFileName(url));
 
     const result = await loader(url, tempDir);
-    const expected = path.join(tempDir, 'rustamyusupov-github-io-nerds.html');
+    const expected = path.join(tempDir, 'site-com-blog-about.html');
 
     expect(result).toBe(expected);
   });
@@ -47,24 +47,21 @@ describe('index loader', () => {
     const htmlFile = fs.readFileSync(getFixture('index.html'), 'utf-8');
     const getFile = (name) => fs.readFileSync(getFixture(name), 'utf-8');
     const files = {
-      css: ['/nerds/css/style.min.css', getFile('css/style.min.css')],
-      img1: ['/nerds/img/index-features1.png', getFile('img/index-features1.png')],
-      img2: ['/nerds/img/index-features2.png', getFile('img/index-features2.png')],
-      img3: ['/nerds/img/index-features3.png', getFile('img/index-features3.png')],
-      js: ['/nerds/js/script.min.js', getFile('js/script.min.js')],
+      html: ['/blog/about', htmlFile],
+      css: ['/blog/about/assets/styles.css', getFile('blog/about/assets/styles.css')],
+      img: ['/photos/me.png', getFile('photos/me.png')],
+      js: ['/assets/scripts.js', getFile('assets/scripts.js')],
     };
 
     nock(origin)
       .get(pathname)
       .reply(responseStatuses.ok, htmlFile)
+      .get(files.html[0])
+      .reply(responseStatuses.ok, htmlFile)
       .get(files.css[0])
       .reply(responseStatuses.ok, files.css[1])
-      .get(files.img1[0])
-      .reply(responseStatuses.ok, files.img1[1])
-      .get(files.img2[0])
-      .reply(responseStatuses.ok, files.img2[1])
-      .get(files.img3[0])
-      .reply(responseStatuses.ok, files.img3[1])
+      .get(files.img[0])
+      .reply(responseStatuses.ok, files.img[1])
       .get(files.js[0])
       .reply(responseStatuses.ok, files.js[1]);
 
@@ -74,19 +71,13 @@ describe('index loader', () => {
 
     await loader(url, tempDir);
 
-    const htmlPath = path.join(tempDir, 'rustamyusupov-github-io-nerds.html');
+    const htmlPath = path.join(tempDir, getFileName(url));
     const htmlResult = await fs.promises.readFile(htmlPath, 'utf-8');
     const htmlExpected = await fs.promises.readFile(getFixture('result.html'), 'utf-8');
 
     expect(htmlResult).toBe(htmlExpected);
 
-    const filePaths = [
-      '/css/style.min.css',
-      '/img/index-features1.png',
-      '/img/index-features2.png',
-      '/img/index-features3.png',
-      '/js/script.min.js',
-    ];
+    const filePaths = ['/blog/about/assets/styles.css', '/photos/me.png', '/assets/scripts.js'];
 
     filePaths.forEach((file) => {
       const fileName = getFileName(`${origin}${file}`);

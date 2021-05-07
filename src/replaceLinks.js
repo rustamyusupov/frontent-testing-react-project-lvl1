@@ -11,19 +11,19 @@ const map = {
 const replaceLinks = (data, url) => {
   const links = [];
   const $ = cheerio.load(data);
-  const { origin } = new URL(url);
+  const { host, origin } = new URL(url);
   const folder = getFolderName(url);
 
   Object.entries(map).forEach(([tag, attr]) =>
     $(tag).each((_, el) => {
-      const value = $(el).attr(attr).replace(/\/\//g, '/');
+      const value = $(el).attr(attr);
+      const link = new URL(value, origin);
 
-      if (value.includes('http')) {
+      if (link.host !== host) {
         return;
       }
 
-      const link = new URL(`${url}/${value}`);
-      const name = getFileName(`${origin}/${value}`);
+      const name = getFileName(link.toString());
       const path = `${folder}/${name}`;
 
       $(el).attr(attr, path);
