@@ -96,7 +96,7 @@ describe('index loader', () => {
   });
 
   it('should return error for wrong folder', async () => {
-    await nock(origin).get(pathname).reply(responseStatuses.ok);
+    nock(origin).get(pathname).reply(responseStatuses.ok, '');
 
     await expect(loader(url, `${tempDir}\folder`)).rejects.toThrow();
   });
