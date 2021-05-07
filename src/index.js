@@ -28,13 +28,11 @@ const loader = async (url, folder, log = logger) => {
   const { data, links } = replaceLinks(htmlData, url);
 
   try {
-    if (!fs.existsSync(filesPath)) {
-      log(`create directory ${filesPath}`);
-      fs.mkdirSync(filesPath);
-    }
+    log(`create directory ${filesPath}`);
+    await fs.promises.mkdir(filesPath);
 
     log(`save page ${htmlPath}`);
-    fs.writeFileSync(htmlPath, data);
+    await fs.promises.writeFile(htmlPath, data);
   } catch (error) {
     log(error);
     throw error;
