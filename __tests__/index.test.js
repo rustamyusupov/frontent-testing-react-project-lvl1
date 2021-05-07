@@ -34,31 +34,24 @@ describe('index loader', () => {
 
   it('should return files', async () => {
     const htmlFile = await fs.promises.readFile(getFixture('index.html'), 'utf-8');
-
-    const getFile = async (name) => {
-      const result = await fs.promises.readFile(getFixture(name), 'utf-8');
-
-      return result;
-    };
-
-    const files = {
-      html: ['/courses', await htmlFile],
-      css: ['/assets/application.css', await getFile('assets/application.css')],
-      img: ['/assets/professions/nodejs.png', await getFile('assets/professions/nodejs.png')],
-      js: ['/packs/js/runtime.js', await getFile('packs/js/runtime.js')],
-    };
+    const cssFile = await fs.promises.readFile(getFixture('assets/application.css'), 'utf-8');
+    const jsFile = await fs.promises.readFile(getFixture('packs/js/runtime.js'), 'utf-8');
+    const imgFile = await fs.promises.readFile(
+      getFixture('assets/professions/nodejs.png'),
+      'utf-8'
+    );
 
     nock(origin)
       .get(pathname)
       .reply(responseStatuses.ok, htmlFile)
-      .get(files.html[0])
+      .get('/courses')
       .reply(responseStatuses.ok, htmlFile)
-      .get(files.css[0])
-      .reply(responseStatuses.ok, files.css[1])
-      .get(files.img[0])
-      .reply(responseStatuses.ok, files.img[1])
-      .get(files.js[0])
-      .reply(responseStatuses.ok, files.js[1]);
+      .get('/assets/application.css')
+      .reply(responseStatuses.ok, cssFile)
+      .get('/assets/professions/nodejs.png')
+      .reply(responseStatuses.ok, imgFile)
+      .get('/packs/js/runtime.js')
+      .reply(responseStatuses.ok, jsFile);
 
     await loader(url, tempDir);
 
@@ -68,23 +61,59 @@ describe('index loader', () => {
 
     expect(htmlResult).toBe(htmlExpected);
 
-    const filePaths = [
-      '/assets/application.css',
-      '/assets/professions/nodejs.png',
-      '/packs/js/runtime.js',
-    ];
+    const cssPath = path.join(
+      tempDir,
+      'ru-hexlet-io-courses_files',
+      getFileName(`${origin}/assets/application.css`)
+    );
+    const cssResult = await fs.promises.readFile(cssPath, 'utf-8');
+    const cssExpected = await fs.promises.readFile(getFixture('/assets/application.css'), 'utf-8');
 
-    const test = async (file) => {
-      const fileName = getFileName(`${origin}${file}`);
-      const filePath = path.join(tempDir, 'ru-hexlet-io-courses_files', fileName);
-      const result = await fs.promises.readFile(filePath, 'utf-8');
-      const expected = await fs.promises.readFile(getFixture(file), 'utf-8');
+    expect(cssResult).toBe(cssExpected);
 
-      expect(result).toBe(expected);
-    };
+    const imgPath = path.join(
+      tempDir,
+      'ru-hexlet-io-courses_files',
+      getFileName(`${origin}/assets/professions/nodejs.png`)
+    );
+    const imgResult = await fs.promises.readFile(imgPath, 'utf-8');
+    const imgExpected = await fs.promises.readFile(
+      getFixture('/assets/professions/nodejs.png'),
+      'utf-8'
+    );
 
-    const promises = filePaths.map(test);
-    await Promise.all(promises);
+    expect(imgResult).toBe(imgExpected);
+
+    const jsPath = path.join(
+      tempDir,
+      'ru-hexlet-io-courses_files',
+      getFileName(`${origin}/packs/js/runtime.js`)
+    );
+    const jsResult = await fs.promises.readFile(jsPath, 'utf-8');
+    const jsExpected = await fs.promises.readFile(getFixture('/packs/js/runtime.js'), 'utf-8');
+
+    expect(jsResult).toBe(jsExpected);
+
+    // const promises = filePaths.map(test);
+    // await Promise.all(promises);
+
+    // const filePaths = [
+    //   '/assets/application.css',
+    //   '/assets/professions/nodejs.png',
+    //   '/packs/js/runtime.js',
+    // ];
+
+    // const test = async (file) => {
+    //   const fileName = getFileName(`${origin}${file}`);
+    //   const filePath = path.join(tempDir, 'ru-hexlet-io-courses_files', fileName);
+    //   const result = await fs.promises.readFile(filePath, 'utf-8');
+    //   const expected = await fs.promises.readFile(getFixture(file), 'utf-8');
+
+    //   expect(result).toBe(expected);
+    // };
+
+    // const promises = filePaths.map(test);
+    // await Promise.all(promises);
   });
 
   it('should reject with 404', async () => {
