@@ -42,10 +42,10 @@ describe('index loader', () => {
     };
 
     const files = {
-      html: ['/courses', htmlFile],
-      css: ['/assets/application.css', getFile('assets/application.css')],
-      img: ['/assets/professions/nodejs.png', getFile('assets/professions/nodejs.png')],
-      js: ['/packs/js/runtime.js', getFile('packs/js/runtime.js')],
+      html: ['/courses', await htmlFile],
+      css: ['/assets/application.css', await getFile('assets/application.css')],
+      img: ['/assets/professions/nodejs.png', await getFile('assets/professions/nodejs.png')],
+      js: ['/packs/js/runtime.js', await getFile('packs/js/runtime.js')],
     };
 
     nock(origin)
@@ -68,20 +68,23 @@ describe('index loader', () => {
 
     expect(htmlResult).toBe(htmlExpected);
 
-    // const filePaths = [
-    //   '/assets/application.css',
-    //   '/assets/professions/nodejs.png',
-    //   '/packs/js/runtime.js',
-    // ];
+    const filePaths = [
+      '/assets/application.css',
+      '/assets/professions/nodejs.png',
+      '/packs/js/runtime.js',
+    ];
 
-    // filePaths.forEach((file) => {
-    //   const fileName = getFileName(`${origin}${file}`);
-    //   const filePath = path.join(tempDir, 'ru-hexlet-io-courses_files', fileName);
-    //   const result = await fs.promises.readFile(filePath, 'utf-8');
-    //   const expected = await fs.promises.readFile(getFixture(file), 'utf-8');
+    const test = async (file) => {
+      const fileName = getFileName(`${origin}${file}`);
+      const filePath = path.join(tempDir, 'ru-hexlet-io-courses_files', fileName);
+      const result = await fs.promises.readFile(filePath, 'utf-8');
+      const expected = await fs.promises.readFile(getFixture(file), 'utf-8');
 
-    //   expect(result).toBe(expected);
-    // });
+      expect(result).toBe(expected);
+    };
+
+    const promises = filePaths.map(test);
+    await Promise.all(promises);
   });
 
   it('should reject with 404', async () => {
