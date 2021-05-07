@@ -98,7 +98,7 @@ describe('index loader', () => {
 
     const result = () => loader(`${origin}/notFound`, tempDir);
 
-    await expect(result).rejects.toThrow('Request failed with status code 404');
+    await expect(result).rejects.toThrow(Error);
   });
 
   it('should reject with 500', async () => {
@@ -106,7 +106,7 @@ describe('index loader', () => {
 
     const result = loader(url, tempDir);
 
-    await expect(result).rejects.toThrow('Request failed with status code 500');
+    await expect(result).rejects.toThrow(Error);
   });
 
   it('should return error for wrong folder', async () => {
