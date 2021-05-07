@@ -44,8 +44,6 @@ describe('index loader', () => {
     nock(origin)
       .get(pathname)
       .reply(responseStatuses.ok, htmlFile)
-      .get('/courses')
-      .reply(responseStatuses.ok, htmlFile)
       .get('/assets/application.css')
       .reply(responseStatuses.ok, cssFile)
       .get('/assets/professions/nodejs.png')
@@ -93,9 +91,6 @@ describe('index loader', () => {
     const jsExpected = await fs.promises.readFile(getFixture('/packs/js/runtime.js'), 'utf-8');
 
     expect(jsResult).toBe(jsExpected);
-
-    // const promises = filePaths.map(test);
-    // await Promise.all(promises);
 
     // const filePaths = [
     //   '/assets/application.css',
