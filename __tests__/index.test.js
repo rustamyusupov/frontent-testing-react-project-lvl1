@@ -82,13 +82,13 @@ describe('index loader', () => {
   //   });
   // });
 
-  // it('should reject with 404', async () => {
-  //   nock(origin).get('/notFound').reply(responseStatuses.notFound);
+  it('should reject with 404', async () => {
+    nock(origin).get('/notFound').reply(responseStatuses.notFound);
 
-  //   const result = () => loader(`${origin}/notFound`, tempDir);
+    const result = () => loader(`${origin}/notFound`, tempDir);
 
-  //   await expect(result).rejects.toThrow(Error);
-  // });
+    await expect(result).rejects.toThrow(Error);
+  });
 
   it('should return error for wrong folder', async () => {
     nock(origin).get(pathname).reply(responseStatuses.ok);
