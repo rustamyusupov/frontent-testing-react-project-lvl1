@@ -32,55 +32,55 @@ describe('index loader', () => {
   afterEach(() => nock.cleanAll());
   afterAll(() => nock.enableNetConnect());
 
-  // it('should return files', async () => {
-  //   const htmlFile = fs.readFileSync(getFixture('index.html'), 'utf-8');
-  //   const getFile = (name) => fs.readFileSync(getFixture(name), 'utf-8');
-  //   const files = {
-  //     html: ['/courses', htmlFile],
-  //     css: ['/assets/application.css', getFile('assets/application.css')],
-  //     img: ['/assets/professions/nodejs.png', getFile('assets/professions/nodejs.png')],
-  //     js: ['/packs/js/runtime.js', getFile('packs/js/runtime.js')],
-  //   };
+  it('should return files', async () => {
+    const htmlFile = fs.readFileSync(getFixture('index.html'), 'utf-8');
+    const getFile = (name) => fs.readFileSync(getFixture(name), 'utf-8');
+    const files = {
+      html: ['/courses', htmlFile],
+      css: ['/assets/application.css', getFile('assets/application.css')],
+      img: ['/assets/professions/nodejs.png', getFile('assets/professions/nodejs.png')],
+      js: ['/packs/js/runtime.js', getFile('packs/js/runtime.js')],
+    };
 
-  //   nock(origin)
-  //     .get(pathname)
-  //     .reply(responseStatuses.ok, htmlFile)
-  //     .get(files.html[0])
-  //     .reply(responseStatuses.ok, htmlFile)
-  //     .get(files.css[0])
-  //     .reply(responseStatuses.ok, files.css[1])
-  //     .get(files.img[0])
-  //     .reply(responseStatuses.ok, files.img[1])
-  //     .get(files.js[0])
-  //     .reply(responseStatuses.ok, files.js[1]);
+    nock(origin)
+      .get(pathname)
+      .reply(responseStatuses.ok, htmlFile)
+      .get(files.html[0])
+      .reply(responseStatuses.ok, htmlFile)
+      .get(files.css[0])
+      .reply(responseStatuses.ok, files.css[1])
+      .get(files.img[0])
+      .reply(responseStatuses.ok, files.img[1])
+      .get(files.js[0])
+      .reply(responseStatuses.ok, files.js[1]);
 
-  //   // TODO: how to do this?
-  //   // .get(/(js|css|img)\/.*/)
-  //   // .reply((uri) => [responseStatuses.ok, fs.readFileSync(getFixture(uri), 'utf-8')]);
+    // TODO: how to do this?
+    // .get(/(js|css|img)\/.*/)
+    // .reply((uri) => [responseStatuses.ok, fs.readFileSync(getFixture(uri), 'utf-8')]);
 
-  //   await loader(url, tempDir);
+    await loader(url, tempDir);
 
-  //   const htmlPath = path.join(tempDir, getFileName(url));
-  //   const htmlResult = await fs.promises.readFile(htmlPath, 'utf-8');
-  //   const htmlExpected = await fs.promises.readFile(getFixture('result.html'), 'utf-8');
+    const htmlPath = path.join(tempDir, getFileName(url));
+    const htmlResult = await fs.promises.readFile(htmlPath, 'utf-8');
+    const htmlExpected = await fs.promises.readFile(getFixture('result.html'), 'utf-8');
 
-  //   expect(htmlResult).toBe(htmlExpected);
+    expect(htmlResult).toBe(htmlExpected);
 
-  //   const filePaths = [
-  //     '/assets/application.css',
-  //     '/assets/professions/nodejs.png',
-  //     '/packs/js/runtime.js',
-  //   ];
+    // const filePaths = [
+    //   '/assets/application.css',
+    //   '/assets/professions/nodejs.png',
+    //   '/packs/js/runtime.js',
+    // ];
 
-  //   filePaths.forEach((file) => {
-  //     const fileName = getFileName(`${origin}${file}`);
-  //     const filePath = path.join(tempDir, 'ru-hexlet-io-courses_files', fileName);
-  //     const result = fs.readFileSync(filePath, 'utf-8');
-  //     const expected = fs.readFileSync(getFixture(file), 'utf-8');
+    // filePaths.forEach((file) => {
+    //   const fileName = getFileName(`${origin}${file}`);
+    //   const filePath = path.join(tempDir, 'ru-hexlet-io-courses_files', fileName);
+    //   const result = fs.readFileSync(filePath, 'utf-8');
+    //   const expected = fs.readFileSync(getFixture(file), 'utf-8');
 
-  //     expect(result).toBe(expected);
-  //   });
-  // });
+    //   expect(result).toBe(expected);
+    // });
+  });
 
   it('should reject with 404', async () => {
     nock(origin).get('/notFound').reply(responseStatuses.notFound);
