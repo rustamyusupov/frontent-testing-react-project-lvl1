@@ -35,7 +35,7 @@ describe('index loader', () => {
   });
 
   it('should return filename', async () => {
-    nock(origin).get(pathname).reply(responseStatuses.ok, getFileName(url));
+    nock(origin).get(pathname).reply(responseStatuses.ok, 'ru-hexlet-io-courses.html');
 
     const result = await loader(url, tempDir);
     const expected = path.join(tempDir, 'ru-hexlet-io-courses.html');
