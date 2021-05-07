@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 import downloadResource from './downloadResource';
-import getName from './getName';
+import { getFileName, getFolderName } from './utils';
 import replaceLinks from './replaceLinks';
 import request from './request';
 
@@ -16,17 +16,16 @@ const loader = async (url, folder, log = logger) => {
     return '';
   }
 
-  const name = getName(url);
-  const htmlName = `${name}.html`;
-  const filesName = `${name}_files`;
-  const htmlPath = path.resolve(__dirname, folder, htmlName);
-  const filesPath = path.resolve(__dirname, folder, filesName);
+  const htmlFile = getFileName(url);
+  const folderName = getFolderName(url);
+  const htmlPath = path.resolve(__dirname, folder, htmlFile);
+  const filesPath = path.resolve(__dirname, folder, folderName);
 
   log(`fetch page ${url}`);
   const htmlData = await request(url, 'text');
 
   log('replace links');
-  const { data, links } = replaceLinks(htmlData, url, log);
+  const { data, links } = replaceLinks(htmlData, url);
 
   try {
     if (!fs.existsSync(filesPath)) {
@@ -40,7 +39,9 @@ const loader = async (url, folder, log = logger) => {
     throw new Error(error);
   }
 
-  const promises = links.map((link) => downloadResource(link, filesPath, log));
+  const promises = links.map(({ href, name }) =>
+    downloadResource({ url: href, path: `${filesPath}/${name}`, log })
+  );
   await Promise.all(promises);
 
   return htmlPath;

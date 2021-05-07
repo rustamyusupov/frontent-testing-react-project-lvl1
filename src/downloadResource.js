@@ -1,17 +1,14 @@
 import fs from 'fs';
 
 import request from './request';
-import getName from './getName';
 
-const downloadResource = async (link, filesPath, log) => {
-  log(`fetch ${link}`);
+const downloadResource = async ({ url, path, log }) => {
+  log(`fetch ${url}`);
 
-  const data = await request(link, 'arraybuffer');
-  const fileName = getName(link);
-  const filePath = `${filesPath}/${fileName}`;
+  const data = await request(url, 'arraybuffer');
 
-  log(`save ${fileName}`);
-  await fs.promises.writeFile(filePath, data);
+  log(`save ${path}`);
+  await fs.promises.writeFile(path, data);
 };
 
 export default downloadResource;

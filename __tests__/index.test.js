@@ -47,11 +47,11 @@ describe('index loader', () => {
     const htmlFile = fs.readFileSync(getFixture('index.html'), 'utf-8');
     const getFile = (name) => fs.readFileSync(getFixture(name), 'utf-8');
     const files = {
-      css: ['/css/style.min.css', getFile('css/style.min.css')],
-      img1: ['/img/index-features1.png', getFile('img/index-features1.png')],
-      img2: ['/img/index-features2.png', getFile('img/index-features2.png')],
-      img3: ['/img/index-features3.png', getFile('img/index-features3.png')],
-      js: ['/js/script.min.js', getFile('js/script.min.js')],
+      css: ['/nerds/css/style.min.css', getFile('css/style.min.css')],
+      img1: ['/nerds/img/index-features1.png', getFile('img/index-features1.png')],
+      img2: ['/nerds/img/index-features2.png', getFile('img/index-features2.png')],
+      img3: ['/nerds/img/index-features3.png', getFile('img/index-features3.png')],
+      js: ['/nerds/js/script.min.js', getFile('js/script.min.js')],
     };
 
     nock(origin)
@@ -89,7 +89,7 @@ describe('index loader', () => {
     ];
 
     filePaths.forEach((file) => {
-      const fileName = getFileName(`${url}${file}`);
+      const fileName = getFileName(`${origin}${file}`);
       const filePath = path.join(tempDir, 'rustamyusupov-github-io-nerds_files', fileName);
       const result = fs.readFileSync(filePath, 'utf-8');
       const expected = fs.readFileSync(getFixture(file), 'utf-8');
