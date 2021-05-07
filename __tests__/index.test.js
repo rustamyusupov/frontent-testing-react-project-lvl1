@@ -114,8 +114,6 @@ describe('index loader', () => {
 
     const result = loader(url, 'wrongFolder');
 
-    await expect(result).rejects.toThrow(
-      "ENOENT: no such file or directory, mkdir '/Users/rustam/Projects/page-loader/src/wrongFolder/ru-hexlet-io-courses_files'"
-    );
+    await expect(result).rejects.toThrow();
   });
 });
