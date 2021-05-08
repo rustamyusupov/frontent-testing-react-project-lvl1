@@ -5,7 +5,7 @@ import path from 'path';
 import download from './downloadResource';
 import updatePaths from './updatePaths';
 import request from './request';
-import { getFileName, getFolderName } from './utils';
+import getName from './getName';
 
 const logger = debug('page-loader');
 
@@ -16,8 +16,8 @@ const loader = async (url, folder, log = logger) => {
     return '';
   }
 
-  const htmlFileName = getFileName(url);
-  const folderName = getFolderName(url);
+  const htmlFileName = getName(url);
+  const folderName = getName(url, 'folder');
   const htmlFilePath = path.resolve(__dirname, folder, htmlFileName);
   const folderPath = path.resolve(__dirname, folder, folderName);
 

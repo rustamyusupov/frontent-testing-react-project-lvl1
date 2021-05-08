@@ -1,6 +1,6 @@
 import cheerio from 'cheerio';
 
-import { getFileName, getFolderName } from './utils';
+import getName from './getName';
 
 const map = {
   img: 'src',
@@ -12,7 +12,7 @@ const updatePaths = (data, url) => {
   const links = [];
   const $ = cheerio.load(data);
   const { host, origin } = new URL(url);
-  const folder = getFolderName(url);
+  const folder = getName(url, 'folder');
 
   Object.entries(map).forEach(([tag, attr]) => {
     $(tag).each((_, el) => {
@@ -24,7 +24,7 @@ const updatePaths = (data, url) => {
       }
 
       const href = link.toString();
-      const name = getFileName(href);
+      const name = getName(href);
       const path = `${folder}/${name}`;
 
       $(el).attr(attr, path);

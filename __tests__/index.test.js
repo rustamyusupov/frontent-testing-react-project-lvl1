@@ -4,7 +4,7 @@ import nock from 'nock';
 import os from 'os';
 import path from 'path';
 
-import { getFileName } from '../src/utils';
+import getName from '../src/getName';
 import loader from '../src/index';
 
 axios.defaults.adapter = require('axios/lib/adapters/http');
@@ -62,7 +62,7 @@ describe('index loader', () => {
 
     await loader(url, tempDir);
 
-    const htmlPath = path.join(tempDir, getFileName(url));
+    const htmlPath = path.join(tempDir, getName(url));
     const htmlResult = await fs.readFile(htmlPath, 'utf-8');
     const htmlExpected = await fs.readFile(getFixture('result.html'), 'utf-8');
 
@@ -75,7 +75,7 @@ describe('index loader', () => {
     ];
 
     const test = async (file) => {
-      const fileName = getFileName(`${origin}${file}`);
+      const fileName = getName(`${origin}${file}`);
       const filePath = path.join(tempDir, 'ru-hexlet-io-courses_files', fileName);
       const result = await fs.readFile(filePath, 'utf-8');
       const expected = await fs.readFile(getFixture(file), 'utf-8');

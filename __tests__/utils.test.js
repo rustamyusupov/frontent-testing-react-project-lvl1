@@ -1,9 +1,9 @@
-import { getFileName, getFolderName } from '../src/utils';
+import getName from '../src/getName';
 
-describe('utils', () => {
+describe('getName', () => {
   it('should return html file name', () => {
     const url = 'http://rustamyusupov.github.io/nerds';
-    const result = getFileName(url);
+    const result = getName(url);
     const expected = 'rustamyusupov-github-io-nerds.html';
 
     expect(result).toBe(expected);
@@ -11,7 +11,7 @@ describe('utils', () => {
 
   it('should return resource file name', () => {
     const url = 'http://rustamyusupov.github.io/img/index-features1.img';
-    const result = getFileName(url);
+    const result = getName(url);
     const expected = 'rustamyusupov-github-io-img-index-features1.img';
 
     expect(result).toBe(expected);
@@ -19,28 +19,28 @@ describe('utils', () => {
 
   it('should return file name for double extension', () => {
     const url = 'http://rustamyusupov.github.io/css/style.min.css';
-    const result = getFileName(url);
+    const result = getName(url);
     const expected = 'rustamyusupov-github-io-css-style-min.css';
 
     expect(result).toBe(expected);
   });
 
   it('should return empty file name', () => {
-    const result = getFileName('');
+    const result = getName('');
 
     expect(result).toBe('');
   });
 
   it('should return empty folder name', () => {
     const url = 'http://rustamyusupov.github.io/nerds';
-    const result = getFolderName(url);
+    const result = getName(url, 'folder');
     const expected = 'rustamyusupov-github-io-nerds_files';
 
     expect(result).toBe(expected);
   });
 
   it('should return empty folder', () => {
-    const result = getFolderName('');
+    const result = getName('', 'folder');
 
     expect(result).toBe('');
   });
