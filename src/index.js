@@ -2,7 +2,6 @@ import debug from 'debug';
 import fs from 'fs/promises';
 import path from 'path';
 
-import download from './downloadResource';
 import updatePaths from './updatePaths';
 import request from './request';
 import getName from './getName';
@@ -11,7 +10,7 @@ const logger = debug('page-loader');
 
 const loader = async (url, folder, log = logger) => {
   if (!url) {
-    log('url is empty');
+    log('error: url is empty');
 
     return '';
   }
@@ -25,7 +24,7 @@ const loader = async (url, folder, log = logger) => {
     log(`fetch page ${url}`);
     const htmlData = await request(url);
 
-    log('replace links');
+    log('update paths');
     const { data, links } = updatePaths(htmlData, url);
 
     log(`create directory ${folderPath}`);
@@ -34,11 +33,10 @@ const loader = async (url, folder, log = logger) => {
     log(`save page ${htmlFilePath}`);
     await fs.writeFile(htmlFilePath, data);
 
-    // maybe separate actions: fetch and save
-    const promises = links.map(({ href, name }) => {
+    const promises = links.map(async ({ href, name }) => {
       log(`fetch resource ${href}`);
-
-      return download(href, `${folderPath}/${name}`);
+      const response = await request(href, 'arraybuffer');
+      await fs.writeFile(`${folderPath}/${name}`, response);
     });
     await Promise.all(promises);
 
