@@ -8,7 +8,7 @@ const map = {
   script: 'src',
 };
 
-const replaceLinks = (data, url) => {
+const updatePaths = (data, url) => {
   const links = [];
   const $ = cheerio.load(data);
   const { host, origin } = new URL(url);
@@ -35,4 +35,4 @@ const replaceLinks = (data, url) => {
   return { data: $.html(), links };
 };
 
-export default replaceLinks;
+export default updatePaths;
