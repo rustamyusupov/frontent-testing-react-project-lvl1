@@ -9,6 +9,7 @@ const getStr = (url) => {
 
 const transform = (str) => str.replace(/[^\w]/gi, '-');
 
+// union to one func
 export const getFileName = (url) => {
   if (!url) {
     return '';

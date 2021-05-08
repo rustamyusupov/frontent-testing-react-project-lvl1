@@ -23,11 +23,12 @@ const replaceLinks = (data, url) => {
         return;
       }
 
-      const name = getFileName(link.toString());
+      const href = link.toString();
+      const name = getFileName(href);
       const path = `${folder}/${name}`;
 
       $(el).attr(attr, path);
-      links.push({ href: link.toString(), name });
+      links.push({ href, name });
     });
   });
 

@@ -34,6 +34,7 @@ const loader = async (url, folder, log = logger) => {
     log(`save page ${htmlPath}`);
     await fs.writeFile(htmlPath, data);
 
+    // maybe separate actions: fetch and save
     const promises = links.map(({ href, name }) => {
       log(`fetch resource ${href}`);
 
