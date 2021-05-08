@@ -9,25 +9,22 @@ import loader from '../src/index';
 
 axios.defaults.adapter = require('axios/lib/adapters/http');
 
-const origin = 'https://ru.hexlet.io';
-const pathname = '/courses';
-const url = `${origin}${pathname}`;
-const responseStatuses = {
-  ok: 200,
-  notFound: 404,
-  serverError: 500,
-};
-
 const getFixture = (fileName) => path.join(__dirname, '../__fixtures__', fileName);
 
 describe('index loader', () => {
   let tempDir = '';
+  const origin = 'https://ru.hexlet.io';
+  const pathname = '/courses';
+  const url = `${origin}${pathname}`;
+  const responseStatuses = {
+    ok: 200,
+    notFound: 404,
+    serverError: 500,
+  };
 
   beforeAll(() => nock.disableNetConnect());
   beforeEach(async () => {
-    const dirPath = path.join(os.tmpdir(), 'page-loader-');
-
-    tempDir = await fs.mkdtemp(dirPath);
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'page-loader-'));
   });
   afterEach(() => nock.cleanAll());
   afterAll(() => nock.enableNetConnect());
