@@ -21,27 +21,31 @@ const loader = async (url, folder, log = logger) => {
   const htmlPath = path.resolve(__dirname, folder, htmlFile);
   const filesPath = path.resolve(__dirname, folder, folderName);
 
-  log(`fetch page ${url}`);
-  const htmlData = await request({ url, responseType: 'text', log });
-
-  log('replace links');
-  const { data, links } = replaceLinks(htmlData, url);
-
   try {
+    log(`fetch page ${url}`);
+    const htmlData = await request(url);
+
+    log('replace links');
+    const { data, links } = replaceLinks(htmlData, url);
+
     log(`create directory ${filesPath}`);
     await fs.mkdir(filesPath);
 
     log(`save page ${htmlPath}`);
     await fs.writeFile(htmlPath, data);
+
+    const promises = links.map(({ href, name }) => {
+      log(`fetch resource ${href}`);
+
+      return download(href, `${filesPath}/${name}`);
+    });
+    await Promise.all(promises);
+
+    return htmlPath;
   } catch (error) {
-    log(error);
+    log(`error: ${error}`);
     throw error;
   }
-
-  const promises = links.map(({ href, name }) => download(href, `${filesPath}/${name}`, log));
-  await Promise.all(promises);
-
-  return htmlPath;
 };
 
 export default loader;
