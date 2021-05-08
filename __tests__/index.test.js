@@ -16,10 +16,9 @@ describe('index loader', () => {
   const origin = 'https://ru.hexlet.io';
   const pathname = '/courses';
   const url = `${origin}${pathname}`;
-  const responseStatuses = {
+  const serverResponse = {
     ok: 200,
     notFound: 404,
-    serverError: 500,
   };
 
   beforeAll(() => nock.disableNetConnect());
@@ -37,13 +36,13 @@ describe('index loader', () => {
 
     nock(origin)
       .get(pathname)
-      .reply(responseStatuses.ok, htmlFile)
+      .reply(serverResponse.ok, htmlFile)
       .get('/assets/application.css')
-      .reply(responseStatuses.ok, cssFile)
+      .reply(serverResponse.ok, cssFile)
       .get('/assets/professions/nodejs.png')
-      .reply(responseStatuses.ok, imgFile)
+      .reply(serverResponse.ok, imgFile)
       .get('/packs/js/runtime.js')
-      .reply(responseStatuses.ok, jsFile);
+      .reply(serverResponse.ok, jsFile);
 
     await loader(url, tempDir);
 
@@ -73,7 +72,7 @@ describe('index loader', () => {
   });
 
   it('should reject with 404', async () => {
-    const scope = nock(origin).get('/notFound').reply(responseStatuses.notFound);
+    const scope = nock(origin).get('/notFound').reply(serverResponse.notFound);
     const result = () => loader(`${origin}/notFound`, tempDir);
 
     await expect(result).rejects.toThrow(Error);
@@ -81,7 +80,7 @@ describe('index loader', () => {
   });
 
   it('should return error for wrong folder', async () => {
-    const scope = nock(origin).get(pathname).reply(responseStatuses.ok, '');
+    const scope = nock(origin).get(pathname).reply(serverResponse.ok, '');
 
     await expect(loader(url, `${tempDir}/folder`)).rejects.toThrow();
     scope.done();
