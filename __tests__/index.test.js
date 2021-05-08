@@ -89,7 +89,6 @@ describe('index loader', () => {
 
   it('should reject with 404', async () => {
     const scope = nock(origin).get('/notFound').reply(responseStatuses.notFound);
-
     const result = () => loader(`${origin}/notFound`, tempDir);
 
     await expect(result).rejects.toThrow(Error);
