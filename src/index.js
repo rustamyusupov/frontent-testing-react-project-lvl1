@@ -2,9 +2,9 @@ import debug from 'debug';
 import fs from 'fs/promises';
 import path from 'path';
 
-import updatePaths from './updatePaths';
-import request from './request';
 import getName from './getName';
+import request from './request';
+import updatePaths from './updatePaths';
 
 const logger = debug('page-loader');
 
