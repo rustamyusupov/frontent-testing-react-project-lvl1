@@ -34,31 +34,19 @@ describe('index loader', () => {
 
   it('should return files', async () => {
     const htmlFile = await fs.readFile(getFixture('index.html'), 'utf-8');
-
-    const getFile = async (name) => {
-      const result = await fs.readFile(getFixture(name), 'utf-8');
-
-      return result;
-    };
-
-    const files = {
-      html: ['/courses', await htmlFile],
-      css: ['/assets/application.css', await getFile('assets/application.css')],
-      img: ['/assets/professions/nodejs.png', await getFile('assets/professions/nodejs.png')],
-      js: ['/packs/js/runtime.js', await getFile('packs/js/runtime.js')],
-    };
+    const cssFile = await fs.readFile(getFixture('assets/application.css'), 'utf-8');
+    const imgFile = await fs.readFile(getFixture('assets/professions/nodejs.png'), 'utf-8');
+    const jsFile = await fs.readFile(getFixture('packs/js/runtime.js'), 'utf-8');
 
     nock(origin)
       .get(pathname)
       .reply(responseStatuses.ok, htmlFile)
-      .get(files.html[0])
-      .reply(responseStatuses.ok, htmlFile)
-      .get(files.css[0])
-      .reply(responseStatuses.ok, files.css[1])
-      .get(files.img[0])
-      .reply(responseStatuses.ok, files.img[1])
-      .get(files.js[0])
-      .reply(responseStatuses.ok, files.js[1]);
+      .get('/assets/application.css')
+      .reply(responseStatuses.ok, cssFile)
+      .get('/assets/professions/nodejs.png')
+      .reply(responseStatuses.ok, imgFile)
+      .get('/packs/js/runtime.js')
+      .reply(responseStatuses.ok, jsFile);
 
     await loader(url, tempDir);
 
@@ -68,7 +56,7 @@ describe('index loader', () => {
 
     expect(htmlResult).toBe(htmlExpected);
 
-    const filePaths = [
+    const assetsPaths = [
       '/assets/application.css',
       '/assets/professions/nodejs.png',
       '/packs/js/runtime.js',
@@ -83,7 +71,7 @@ describe('index loader', () => {
       expect(result).toBe(expected);
     };
 
-    const promises = filePaths.map(test);
+    const promises = assetsPaths.map(test);
     await Promise.all(promises);
   });
 
