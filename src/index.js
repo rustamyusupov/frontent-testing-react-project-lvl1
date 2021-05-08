@@ -1,5 +1,5 @@
 import debug from 'debug';
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 
 import download from './downloadResource';
@@ -29,10 +29,10 @@ const loader = async (url, folder, log = logger) => {
 
   try {
     log(`create directory ${filesPath}`);
-    await fs.promises.mkdir(filesPath);
+    await fs.mkdir(filesPath);
 
     log(`save page ${htmlPath}`);
-    await fs.promises.writeFile(htmlPath, data);
+    await fs.writeFile(htmlPath, data);
   } catch (error) {
     log(error);
     throw error;

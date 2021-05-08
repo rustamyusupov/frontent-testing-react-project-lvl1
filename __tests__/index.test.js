@@ -1,5 +1,5 @@
 import axios from 'axios';
-import fs from 'fs';
+import fs from 'fs/promises';
 import nock from 'nock';
 import os from 'os';
 import path from 'path';
@@ -27,16 +27,16 @@ describe('index loader', () => {
   beforeEach(async () => {
     const dirPath = path.join(os.tmpdir(), 'page-loader-');
 
-    tempDir = await fs.promises.mkdtemp(dirPath);
+    tempDir = await fs.mkdtemp(dirPath);
   });
   afterEach(() => nock.cleanAll());
   afterAll(() => nock.enableNetConnect());
 
   it('should return files', async () => {
-    const htmlFile = await fs.promises.readFile(getFixture('index.html'), 'utf-8');
+    const htmlFile = await fs.readFile(getFixture('index.html'), 'utf-8');
 
     const getFile = async (name) => {
-      const result = await fs.promises.readFile(getFixture(name), 'utf-8');
+      const result = await fs.readFile(getFixture(name), 'utf-8');
 
       return result;
     };
@@ -63,8 +63,8 @@ describe('index loader', () => {
     await loader(url, tempDir);
 
     const htmlPath = path.join(tempDir, getFileName(url));
-    const htmlResult = await fs.promises.readFile(htmlPath, 'utf-8');
-    const htmlExpected = await fs.promises.readFile(getFixture('result.html'), 'utf-8');
+    const htmlResult = await fs.readFile(htmlPath, 'utf-8');
+    const htmlExpected = await fs.readFile(getFixture('result.html'), 'utf-8');
 
     expect(htmlResult).toBe(htmlExpected);
 
@@ -77,8 +77,8 @@ describe('index loader', () => {
     const test = async (file) => {
       const fileName = getFileName(`${origin}${file}`);
       const filePath = path.join(tempDir, 'ru-hexlet-io-courses_files', fileName);
-      const result = await fs.promises.readFile(filePath, 'utf-8');
-      const expected = await fs.promises.readFile(getFixture(file), 'utf-8');
+      const result = await fs.readFile(filePath, 'utf-8');
+      const expected = await fs.readFile(getFixture(file), 'utf-8');
 
       expect(result).toBe(expected);
     };
