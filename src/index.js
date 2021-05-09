@@ -22,7 +22,7 @@ const loader = async (url, folder, log = logger) => {
 
   try {
     log(`fetch page ${url}`);
-    const htmlData = await request(url);
+    const htmlData = await request(url, { responseType: 'text' });
 
     log('update paths');
     const { data, links } = updatePaths(htmlData, url);
@@ -35,7 +35,7 @@ const loader = async (url, folder, log = logger) => {
 
     const promises = links.map(async ({ href, name }) => {
       log(`fetch resource ${href}`);
-      const response = await request(href, 'arraybuffer');
+      const response = await request(href, { responseType: 'arraybuffer' });
       await fs.writeFile(`${folderPath}/${name}`, response);
     });
     await Promise.all(promises);
