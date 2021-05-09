@@ -1,26 +1,30 @@
 import getName from '../src/getName';
 
 describe('getName', () => {
+  const origin = 'https://ru.hexlet.io';
+  const pathname = '/courses';
+  const prefix = 'ru-hexlet-io';
+
   it('should return html file name', () => {
-    const url = 'http://rustamyusupov.github.io/nerds';
+    const url = `${origin}${pathname}`;
     const result = getName(url);
-    const expected = 'rustamyusupov-github-io-nerds.html';
+    const expected = `${prefix}-courses.html`;
 
     expect(result).toBe(expected);
   });
 
-  it('should return resource file name', () => {
-    const url = 'http://rustamyusupov.github.io/img/index-features1.img';
+  it('should return css file name', () => {
+    const url = `${origin}/assets/application.css`;
     const result = getName(url);
-    const expected = 'rustamyusupov-github-io-img-index-features1.img';
+    const expected = `${prefix}-assets-application.css`;
 
     expect(result).toBe(expected);
   });
 
-  it('should return file name for double extension', () => {
-    const url = 'http://rustamyusupov.github.io/css/style.min.css';
+  it('should return img file name', () => {
+    const url = `${origin}/assets/professions/nodejs.png`;
     const result = getName(url);
-    const expected = 'rustamyusupov-github-io-css-style-min.css';
+    const expected = `${prefix}-assets-professions-nodejs.png`;
 
     expect(result).toBe(expected);
   });
@@ -32,9 +36,9 @@ describe('getName', () => {
   });
 
   it('should return empty folder name', () => {
-    const url = 'http://rustamyusupov.github.io/nerds';
+    const url = `${origin}${pathname}`;
     const result = getName(url, 'folder');
-    const expected = 'rustamyusupov-github-io-nerds_files';
+    const expected = `${prefix}-courses_files`;
 
     expect(result).toBe(expected);
   });
