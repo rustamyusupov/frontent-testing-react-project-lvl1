@@ -19,6 +19,7 @@ describe('index loader', () => {
   const serverResponse = {
     ok: 200,
     notFound: 404,
+    serverError: 500,
   };
 
   beforeAll(() => nock.disableNetConnect());
@@ -74,6 +75,14 @@ describe('index loader', () => {
   it('should reject with 404', async () => {
     const scope = nock(origin).get('/notFound').reply(serverResponse.notFound);
     const result = () => loader(`${origin}/notFound`, tempDir);
+
+    await expect(result).rejects.toThrow(Error);
+    scope.done();
+  });
+
+  it('should reject with 500', async () => {
+    const scope = nock(origin).get(pathname).reply(serverResponse.serverError);
+    const result = () => loader(url, tempDir);
 
     await expect(result).rejects.toThrow(Error);
     scope.done();
