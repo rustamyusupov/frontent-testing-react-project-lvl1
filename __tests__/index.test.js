@@ -83,7 +83,7 @@ describe('index loader', () => {
       const result = await readFile(filePath);
 
       expect(result).toBe(expected);
-    }
+    },
   );
 
   it('should reject with 404', async () => {
