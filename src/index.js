@@ -33,12 +33,12 @@ const loader = async (url, folder, log = logger) => {
     log(`save page ${htmlFilePath}`);
     await fs.writeFile(htmlFilePath, data);
 
-    const promises = links.map(async ({ href, name }) => {
+    const getResource = async ({ href, name }) => {
       log(`fetch resource ${href}`);
       const response = await request(href, { responseType: 'arraybuffer' });
       await fs.writeFile(`${folderPath}/${name}`, response);
-    });
-    await Promise.all(promises);
+    };
+    await Promise.all(links.map(getResource));
 
     return htmlFilePath;
   } catch (error) {
