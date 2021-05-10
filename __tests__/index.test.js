@@ -44,8 +44,7 @@ describe('index loader', () => {
     tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'page-loader-'));
 
     const getData = async (resource) => {
-      const filePath = getFixture(resource.name);
-      const data = await readFile(filePath);
+      const data = await readFile(getFixture(resource.name));
 
       // eslint-disable-next-line no-param-reassign
       resource.data = data;
@@ -70,8 +69,7 @@ describe('index loader', () => {
 
     const resultPath = await loader(url, tempDir);
     const result = await readFile(resultPath);
-    const expectedPath = getFixture(htmlFileName);
-    const expected = await readFile(expectedPath);
+    const expected = await readFile(getFixture(htmlFileName));
 
     expect(result).toBe(expected);
   });
@@ -79,8 +77,7 @@ describe('index loader', () => {
   test.each(resources.map((r) => [r.name, r]))(
     'should return %s',
     async (_, { name, data: expected }) => {
-      const filePath = `${tempDir}/${filesFolder}/${name}`;
-      const result = await readFile(filePath);
+      const result = await readFile(`${tempDir}/${filesFolder}/${name}`);
 
       expect(result).toBe(expected);
     },
