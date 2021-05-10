@@ -43,7 +43,10 @@ describe('index loader', () => {
     nock.disableNetConnect();
     tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'page-loader-'));
 
-    const getData = async (resource) => resource.data = await readFile(getFixture(resource.name));
+    const getData = async (resource) => {
+      // eslint-disable-next-line no-param-reassign
+      resource.data = await readFile(getFixture(resource.name));
+    };
     await Promise.all(resources.map(getData));
   });
 
