@@ -8,9 +8,6 @@ import loader from '../src/index';
 
 axios.defaults.adapter = require('axios/lib/adapters/http');
 
-const getFixture = (fileName) => path.join(__dirname, '../__fixtures__', fileName);
-const readFile = (filePath) => fs.readFile(filePath, 'utf-8');
-
 const origin = 'https://ru.hexlet.io';
 const pathname = '/courses';
 const url = `${origin}${pathname}`;
@@ -38,18 +35,15 @@ const resources = [
   },
 ];
 
+const getFixture = (fileName) => path.join(__dirname, '../__fixtures__', fileName);
+const readFile = (filePath) => fs.readFile(filePath, 'utf-8');
+
 describe('index loader', () => {
   beforeAll(async () => {
     nock.disableNetConnect();
     tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'page-loader-'));
 
-    const getData = async (resource) => {
-      const data = await readFile(getFixture(resource.name));
-
-      // eslint-disable-next-line no-param-reassign
-      resource.data = data;
-    };
-
+    const getData = async (resource) => resource.data = await readFile(getFixture(resource.name));
     await Promise.all(resources.map(getData));
   });
 
@@ -60,7 +54,6 @@ describe('index loader', () => {
 
   it(`should return ${htmlFileName}`, async () => {
     const htmlFile = await readFile(getFixture('index.html'));
-
     nock(origin).get(pathname).reply(serverResponse.ok, htmlFile);
 
     resources.forEach((resource) => {
