@@ -70,7 +70,8 @@ describe('index loader', () => {
     expect(result).toBe(expected);
   });
 
-  test.each(resources.map((r) => [r.name, r]))(
+  const table = resources.map((r) => [r.name, r]);
+  test.each(table)(
     'should return %s',
     async (_, { name, data: expected }) => {
       const result = await readFile(`${tempDir}/${filesFolder}/${name}`);
