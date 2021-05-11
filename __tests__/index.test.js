@@ -50,19 +50,21 @@ describe('index loader', () => {
     await Promise.all(resources.map(getData));
   });
 
+  beforeEach(async () => {
+    const htmlFile = await readFile(getFixture('index.html'));
+    nock(origin).persist().get(pathname).reply(serverResponse.ok, htmlFile);
+
+    resources.forEach((resource) => {
+      nock(origin).get(resource.path).reply(serverResponse.ok, resource.data);
+    });
+  });
+
   afterAll(() => {
     nock.cleanAll();
     nock.enableNetConnect();
   });
 
   it(`should return ${htmlFileName}`, async () => {
-    const htmlFile = await readFile(getFixture('index.html'));
-    nock(origin).get(pathname).reply(serverResponse.ok, htmlFile);
-
-    resources.forEach((resource) => {
-      nock(origin).get(resource.path).reply(serverResponse.ok, resource.data);
-    });
-
     const resultPath = await loader(url, tempDir);
     const result = await readFile(resultPath);
     const expected = await readFile(getFixture(htmlFileName));
@@ -89,17 +91,17 @@ describe('index loader', () => {
   });
 
   it('should reject with 500', async () => {
-    const scope = nock(origin).get(pathname).reply(serverResponse.serverError);
-    const result = () => loader(url, tempDir);
+    const scope = nock(origin).get('/').reply(serverResponse.serverError);
+    const result = () => loader(origin, tempDir);
 
     await expect(result).rejects.toThrow(Error);
     scope.done();
   });
 
   it('should return error for wrong folder', async () => {
-    const scope = nock(origin).get(pathname).reply(serverResponse.ok, '');
+    const scope = nock(origin).get('/').reply(serverResponse.ok, '');
 
-    await expect(loader(url, `${tempDir}/folder`)).rejects.toThrow();
+    await expect(loader(origin, `${tempDir}/folder`)).rejects.toThrow();
     scope.done();
   });
 });
